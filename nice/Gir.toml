@@ -1,0 +1,34 @@
+[options]
+girs_dir = "../gir-files"
+library = "Nice"
+version = "0.1"
+target_path = "."
+min_cfg_version = "0.1"
+work_mode = "normal"
+
+external_libraries = [
+  "Glib",
+  "GObject",
+  "Gio",
+]
+
+generate_safety_asserts = true
+deprecate_by_min_version = true
+single_version_file = true
+
+generate = [
+  "Nice.Agent",
+  "Nice.ComponentType",
+  "Nice.ComponentState",
+  "Nice.Compatibility",
+  "Nice.AgentOption",
+  "Nice.RelayType",
+  "Nice.CandidateType",
+  "Nice.CandidateTransport",
+  "Nice.NominationMode",
+  "Nice.ProxyType",
+]
+
+manual = [
+  "GLib.MainContext"
+]

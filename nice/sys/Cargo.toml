@@ -1,0 +1,71 @@
+[package]
+name = "nice-sys"
+version = "0.1.0"
+links = "\"nice\""
+edition = "2018"
+build = "build.rs"
+[package.metadata.system-deps.nice]
+version = "0.1"
+
+[package.metadata.system-deps.nice.v0_1_4]
+version = "0.1.4"
+
+[package.metadata.system-deps.nice.v0_1_5]
+version = "0.1.5"
+
+[package.metadata.system-deps.nice.v0_1_6]
+version = "0.1.6"
+
+[package.metadata.system-deps.nice.v0_1_8]
+version = "0.1.8"
+
+[package.metadata.system-deps.nice.v0_1_14]
+version = "0.1.14"
+
+[package.metadata.system-deps.nice.v0_1_15]
+version = "0.1.15"
+
+[package.metadata.system-deps.nice.v0_1_16]
+version = "0.1.16"
+
+[package.metadata.system-deps.nice.v0_1_17]
+version = "0.1.17"
+
+[package.metadata.system-deps.nice.v0_1_18]
+version = "0.1.18"
+[package.metadata.docs.rs]
+features = ["dox"]
+
+[lib]
+name = "nice_sys"
+
+[dependencies]
+libc = "0.2"
+
+[dependencies.glib-sys]
+git = "https://github.com/gtk-rs/gtk-rs"
+
+[dependencies.gobject-sys]
+git = "https://github.com/gtk-rs/gtk-rs"
+
+[dependencies.gio-sys]
+git = "https://github.com/gtk-rs/gtk-rs"
+
+[build-dependencies]
+system-deps = "2.0"
+
+[dev-dependencies]
+shell-words = "1.0.0"
+tempfile = "3"
+
+[features]
+v0_1_4 = []
+v0_1_5 = ["v0_1_4"]
+v0_1_6 = ["v0_1_5"]
+v0_1_8 = ["v0_1_6"]
+v0_1_14 = ["v0_1_8"]
+v0_1_15 = ["v0_1_14"]
+v0_1_16 = ["v0_1_15"]
+v0_1_17 = ["v0_1_16"]
+v0_1_18 = ["v0_1_17"]
+dox = []
