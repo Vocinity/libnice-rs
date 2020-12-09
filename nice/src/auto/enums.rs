@@ -283,7 +283,6 @@ pub enum ComponentState {
     Connected,
     Ready,
     Failed,
-    Last,
 #[doc(hidden)]
     __Unknown(i32),
 }
@@ -309,7 +308,6 @@ impl fmt::Display for ComponentState {
             ComponentState::Connected => "Connected",
             ComponentState::Ready => "Ready",
             ComponentState::Failed => "Failed",
-            ComponentState::Last => "Last",
             _ => "Unknown",
         })
     }
@@ -327,7 +325,6 @@ impl ToGlib for ComponentState {
             ComponentState::Connected => ffi::NICE_COMPONENT_STATE_CONNECTED,
             ComponentState::Ready => ffi::NICE_COMPONENT_STATE_READY,
             ComponentState::Failed => ffi::NICE_COMPONENT_STATE_FAILED,
-            ComponentState::Last => ffi::NICE_COMPONENT_STATE_LAST,
             ComponentState::__Unknown(value) => value,
 }
     }
@@ -344,7 +341,6 @@ impl FromGlib<ffi::NiceComponentState> for ComponentState {
             3 => ComponentState::Connected,
             4 => ComponentState::Ready,
             5 => ComponentState::Failed,
-            6 => ComponentState::Last,
             value => ComponentState::__Unknown(value),
 }
     }

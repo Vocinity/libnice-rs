@@ -19,7 +19,6 @@ external_libraries = [
 generate = [
   "Nice.Agent",
   "Nice.ComponentType",
-  "Nice.ComponentState",
   "Nice.Compatibility",
   "Nice.AgentOption",
   "Nice.RelayType",
@@ -32,3 +31,11 @@ generate = [
 manual = [
   "GLib.MainContext"
 ]
+
+[[object]]
+name = "Nice.ComponentState"
+status = "generate"
+    [[object.member]]
+    name = "last"
+    ignore = true
+
