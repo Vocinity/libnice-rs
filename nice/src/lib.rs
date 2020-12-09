@@ -13,7 +13,9 @@ macro_rules! assert_initialized_main_thread {
 #[allow(clippy::match_same_arms)]
 mod auto;
 pub use crate::auto::*;
+mod address;
 mod agent;
+pub use address::Address;
 
 pub mod prelude {
     pub use crate::auto::traits::*;

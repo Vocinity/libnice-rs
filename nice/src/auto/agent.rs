@@ -2,6 +2,7 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
+use crate::Address;
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 use crate::AgentOption;
@@ -64,10 +65,15 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_add_local_address")]
-    //pub fn add_local_address(&self, addr: /*Ignored*/&mut Address) -> bool {
-    //    unsafe { TODO: call ffi:nice_agent_add_local_address() }
-    //}
+    #[doc(alias = "nice_agent_add_local_address")]
+    pub fn add_local_address(&self, addr: &mut Address) -> bool {
+        unsafe {
+            from_glib(ffi::nice_agent_add_local_address(
+                self.to_glib_none().0,
+                addr.to_glib_none_mut().0,
+            ))
+        }
+    }
 
     #[doc(alias = "nice_agent_add_stream")]
     pub fn add_stream(&self, n_components: u32) -> u32 {

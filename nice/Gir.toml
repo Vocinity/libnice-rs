@@ -26,6 +26,7 @@ generate = [
   "Nice.NominationMode",
   "Nice.ProxyType",
   "Nice.Candidate",
+  "Nice.Address",
 ]
 
 manual = [
@@ -67,4 +68,8 @@ status = "generate"
     [[object.member]]
     name = "last"
     ignore = true
+
+#[[object]]
+#name = "Nice.Address"
+#status = "generate"
 
