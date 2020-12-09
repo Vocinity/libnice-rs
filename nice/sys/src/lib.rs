@@ -3,11 +3,15 @@
 // DO NOT EDIT
 
 #![allow(non_camel_case_types, non_upper_case_globals, non_snake_case)]
-#![allow(clippy::approx_constant, clippy::type_complexity, clippy::unreadable_literal)]
+#![allow(
+    clippy::approx_constant,
+    clippy::type_complexity,
+    clippy::unreadable_literal
+)]
 #![cfg_attr(feature = "dox", feature(doc_cfg))]
 
-use glib_sys as glib;
 use gio_sys as gio;
+use glib_sys as glib;
 use gobject_sys as gobject;
 
 mod manual;
@@ -15,9 +19,10 @@ mod manual;
 pub use manual::*;
 
 #[allow(unused_imports)]
-use libc::{c_int, c_char, c_uchar, c_float, c_uint, c_double,
-    c_short, c_ushort, c_long, c_ulong,
-    c_void, size_t, ssize_t, intptr_t, uintptr_t, time_t, FILE};
+use libc::{
+    c_char, c_double, c_float, c_int, c_long, c_short, c_uchar, c_uint, c_ulong, c_ushort, c_void,
+    intptr_t, size_t, ssize_t, time_t, uintptr_t, FILE,
+};
 
 #[allow(unused_imports)]
 use glib::{gboolean, gconstpointer, gpointer, GType};
@@ -99,15 +104,16 @@ pub union NiceAddress_s {
 impl ::std::fmt::Debug for NiceAddress_s {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceAddress_s @ {:?}", self as *const _))
-         .field("addr", unsafe { &self.addr })
-         .field("ip4", unsafe { &self.ip4 })
-         .field("ip6", unsafe { &self.ip6 })
-         .finish()
+            .field("addr", unsafe { &self.addr })
+            .field("ip4", unsafe { &self.ip4 })
+            .field("ip6", unsafe { &self.ip6 })
+            .finish()
     }
 }
 
 // Callbacks
-pub type NiceAgentRecvFunc = Option<unsafe extern "C" fn(*mut NiceAgent, c_uint, c_uint, c_uint, *mut c_char, gpointer)>;
+pub type NiceAgentRecvFunc =
+    Option<unsafe extern "C" fn(*mut NiceAgent, c_uint, c_uint, c_uint, *mut c_char, gpointer)>;
 
 // Records
 #[repr(C)]
@@ -119,8 +125,8 @@ pub struct NiceAddress {
 impl ::std::fmt::Debug for NiceAddress {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceAddress @ {:?}", self as *const _))
-         .field("s", &self.s)
-         .finish()
+            .field("s", &self.s)
+            .finish()
     }
 }
 
@@ -133,8 +139,8 @@ pub struct NiceAgentClass {
 impl ::std::fmt::Debug for NiceAgentClass {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceAgentClass @ {:?}", self as *const _))
-         .field("parent_class", &self.parent_class)
-         .finish()
+            .field("parent_class", &self.parent_class)
+            .finish()
     }
 }
 
@@ -156,16 +162,16 @@ pub struct NiceCandidate {
 impl ::std::fmt::Debug for NiceCandidate {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceCandidate @ {:?}", self as *const _))
-         .field("type_", &self.type_)
-         .field("transport", &self.transport)
-         .field("addr", &self.addr)
-         .field("base_addr", &self.base_addr)
-         .field("priority", &self.priority)
-         .field("stream_id", &self.stream_id)
-         .field("component_id", &self.component_id)
-         .field("username", &self.username)
-         .field("password", &self.password)
-         .finish()
+            .field("type_", &self.type_)
+            .field("transport", &self.transport)
+            .field("addr", &self.addr)
+            .field("base_addr", &self.base_addr)
+            .field("priority", &self.priority)
+            .field("stream_id", &self.stream_id)
+            .field("component_id", &self.component_id)
+            .field("username", &self.username)
+            .field("password", &self.password)
+            .finish()
     }
 }
 
@@ -181,11 +187,11 @@ pub struct NiceInputMessage {
 impl ::std::fmt::Debug for NiceInputMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceInputMessage @ {:?}", self as *const _))
-         .field("buffers", &self.buffers)
-         .field("n_buffers", &self.n_buffers)
-         .field("from", &self.from)
-         .field("length", &self.length)
-         .finish()
+            .field("buffers", &self.buffers)
+            .field("n_buffers", &self.n_buffers)
+            .field("from", &self.from)
+            .field("length", &self.length)
+            .finish()
     }
 }
 
@@ -199,9 +205,9 @@ pub struct NiceOutputMessage {
 impl ::std::fmt::Debug for NiceOutputMessage {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceOutputMessage @ {:?}", self as *const _))
-         .field("buffers", &self.buffers)
-         .field("n_buffers", &self.n_buffers)
-         .finish()
+            .field("buffers", &self.buffers)
+            .field("n_buffers", &self.n_buffers)
+            .finish()
     }
 }
 
@@ -212,7 +218,7 @@ pub struct NiceAgent(c_void);
 impl ::std::fmt::Debug for NiceAgent {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         f.debug_struct(&format!("NiceAgent @ {:?}", self as *const _))
-         .finish()
+            .finish()
     }
 }
 
@@ -308,101 +314,279 @@ extern "C" {
     pub fn nice_candidate_copy(candidate: *const NiceCandidate) -> *mut NiceCandidate;
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    pub fn nice_candidate_equal_target(candidate1: *const NiceCandidate, candidate2: *const NiceCandidate) -> gboolean;
+    pub fn nice_candidate_equal_target(
+        candidate1: *const NiceCandidate,
+        candidate2: *const NiceCandidate,
+    ) -> gboolean;
     pub fn nice_candidate_free(candidate: *mut NiceCandidate);
 
     //=========================================================================
     // NiceAgent
     //=========================================================================
     pub fn nice_agent_get_type() -> GType;
-    pub fn nice_agent_new(ctx: *mut glib::GMainContext, compat: NiceCompatibility) -> *mut NiceAgent;
+    pub fn nice_agent_new(
+        ctx: *mut glib::GMainContext,
+        compat: NiceCompatibility,
+    ) -> *mut NiceAgent;
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    pub fn nice_agent_new_full(ctx: *mut glib::GMainContext, compat: NiceCompatibility, flags: NiceAgentOption) -> *mut NiceAgent;
-    pub fn nice_agent_new_reliable(ctx: *mut glib::GMainContext, compat: NiceCompatibility) -> *mut NiceAgent;
+    pub fn nice_agent_new_full(
+        ctx: *mut glib::GMainContext,
+        compat: NiceCompatibility,
+        flags: NiceAgentOption,
+    ) -> *mut NiceAgent;
+    pub fn nice_agent_new_reliable(
+        ctx: *mut glib::GMainContext,
+        compat: NiceCompatibility,
+    ) -> *mut NiceAgent;
     pub fn nice_agent_add_local_address(agent: *mut NiceAgent, addr: *mut NiceAddress) -> gboolean;
     pub fn nice_agent_add_stream(agent: *mut NiceAgent, n_components: c_uint) -> c_uint;
-    pub fn nice_agent_attach_recv(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, ctx: *mut glib::GMainContext, func: NiceAgentRecvFunc, data: gpointer) -> gboolean;
+    pub fn nice_agent_attach_recv(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        ctx: *mut glib::GMainContext,
+        func: NiceAgentRecvFunc,
+        data: gpointer,
+    ) -> gboolean;
     #[cfg(any(feature = "v0_1_16", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_16")))]
-    pub fn nice_agent_close_async(agent: *mut NiceAgent, callback: gio::GAsyncReadyCallback, callback_data: gpointer);
+    pub fn nice_agent_close_async(
+        agent: *mut NiceAgent,
+        callback: gio::GAsyncReadyCallback,
+        callback_data: gpointer,
+    );
     #[cfg(any(feature = "v0_1_6", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_6")))]
-    pub fn nice_agent_forget_relays(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> gboolean;
+    pub fn nice_agent_forget_relays(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> gboolean;
     pub fn nice_agent_gather_candidates(agent: *mut NiceAgent, stream_id: c_uint) -> gboolean;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    pub fn nice_agent_generate_local_candidate_sdp(agent: *mut NiceAgent, candidate: *mut NiceCandidate) -> *mut c_char;
+    pub fn nice_agent_generate_local_candidate_sdp(
+        agent: *mut NiceAgent,
+        candidate: *mut NiceCandidate,
+    ) -> *mut c_char;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     pub fn nice_agent_generate_local_sdp(agent: *mut NiceAgent) -> *mut c_char;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    pub fn nice_agent_generate_local_stream_sdp(agent: *mut NiceAgent, stream_id: c_uint, include_non_ice: gboolean) -> *mut c_char;
+    pub fn nice_agent_generate_local_stream_sdp(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        include_non_ice: gboolean,
+    ) -> *mut c_char;
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    pub fn nice_agent_get_component_state(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> NiceComponentState;
-    pub fn nice_agent_get_default_local_candidate(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut NiceCandidate;
+    pub fn nice_agent_get_component_state(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> NiceComponentState;
+    pub fn nice_agent_get_default_local_candidate(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut NiceCandidate;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_get_io_stream(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut gio::GIOStream;
-    pub fn nice_agent_get_local_candidates(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut glib::GSList;
-    pub fn nice_agent_get_local_credentials(agent: *mut NiceAgent, stream_id: c_uint, ufrag: *mut *mut c_char, pwd: *mut *mut c_char) -> gboolean;
-    pub fn nice_agent_get_remote_candidates(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut glib::GSList;
-    pub fn nice_agent_get_selected_pair(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, local: *mut *mut NiceCandidate, remote: *mut *mut NiceCandidate) -> gboolean;
+    pub fn nice_agent_get_io_stream(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut gio::GIOStream;
+    pub fn nice_agent_get_local_candidates(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut glib::GSList;
+    pub fn nice_agent_get_local_credentials(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        ufrag: *mut *mut c_char,
+        pwd: *mut *mut c_char,
+    ) -> gboolean;
+    pub fn nice_agent_get_remote_candidates(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut glib::GSList;
+    pub fn nice_agent_get_selected_pair(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        local: *mut *mut NiceCandidate,
+        remote: *mut *mut NiceCandidate,
+    ) -> gboolean;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_get_selected_socket(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut gio::GSocket;
+    pub fn nice_agent_get_selected_socket(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut gio::GSocket;
     #[cfg(any(feature = "v0_1_17", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_17")))]
-    pub fn nice_agent_get_sockets(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint) -> *mut glib::GPtrArray;
+    pub fn nice_agent_get_sockets(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+    ) -> *mut glib::GPtrArray;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     pub fn nice_agent_get_stream_name(agent: *mut NiceAgent, stream_id: c_uint) -> *const c_char;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    pub fn nice_agent_parse_remote_candidate_sdp(agent: *mut NiceAgent, stream_id: c_uint, sdp: *const c_char) -> *mut NiceCandidate;
+    pub fn nice_agent_parse_remote_candidate_sdp(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        sdp: *const c_char,
+    ) -> *mut NiceCandidate;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     pub fn nice_agent_parse_remote_sdp(agent: *mut NiceAgent, sdp: *const c_char) -> c_int;
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    pub fn nice_agent_parse_remote_stream_sdp(agent: *mut NiceAgent, stream_id: c_uint, sdp: *const c_char, ufrag: *mut *mut c_char, pwd: *mut *mut c_char) -> *mut glib::GSList;
+    pub fn nice_agent_parse_remote_stream_sdp(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        sdp: *const c_char,
+        ufrag: *mut *mut c_char,
+        pwd: *mut *mut c_char,
+    ) -> *mut glib::GSList;
     #[cfg(any(feature = "v0_1_16", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_16")))]
-    pub fn nice_agent_peer_candidate_gathering_done(agent: *mut NiceAgent, stream_id: c_uint) -> gboolean;
+    pub fn nice_agent_peer_candidate_gathering_done(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+    ) -> gboolean;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_recv(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, buf: *mut u8, buf_len: size_t, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> ssize_t;
+    pub fn nice_agent_recv(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        buf: *mut u8,
+        buf_len: size_t,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> ssize_t;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_recv_messages(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, messages: *mut NiceInputMessage, n_messages: c_uint, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> c_int;
+    pub fn nice_agent_recv_messages(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        messages: *mut NiceInputMessage,
+        n_messages: c_uint,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> c_int;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_recv_messages_nonblocking(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, messages: *mut NiceInputMessage, n_messages: c_uint, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> c_int;
+    pub fn nice_agent_recv_messages_nonblocking(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        messages: *mut NiceInputMessage,
+        n_messages: c_uint,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> c_int;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_recv_nonblocking(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, buf: *mut u8, buf_len: size_t, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> ssize_t;
+    pub fn nice_agent_recv_nonblocking(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        buf: *mut u8,
+        buf_len: size_t,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> ssize_t;
     pub fn nice_agent_remove_stream(agent: *mut NiceAgent, stream_id: c_uint);
     pub fn nice_agent_restart(agent: *mut NiceAgent) -> gboolean;
     #[cfg(any(feature = "v0_1_6", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_6")))]
     pub fn nice_agent_restart_stream(agent: *mut NiceAgent, stream_id: c_uint) -> gboolean;
-    pub fn nice_agent_send(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, len: c_uint, buf: *const c_char) -> c_int;
+    pub fn nice_agent_send(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        len: c_uint,
+        buf: *const c_char,
+    ) -> c_int;
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    pub fn nice_agent_send_messages_nonblocking(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, messages: *const NiceOutputMessage, n_messages: c_uint, cancellable: *mut gio::GCancellable, error: *mut *mut glib::GError) -> c_int;
-    pub fn nice_agent_set_local_credentials(agent: *mut NiceAgent, stream_id: c_uint, ufrag: *const c_char, pwd: *const c_char) -> gboolean;
-    pub fn nice_agent_set_port_range(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, min_port: c_uint, max_port: c_uint);
-    pub fn nice_agent_set_relay_info(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, server_ip: *const c_char, server_port: c_uint, username: *const c_char, password: *const c_char, type_: NiceRelayType) -> gboolean;
-    pub fn nice_agent_set_remote_candidates(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, candidates: *const glib::GSList) -> c_int;
-    pub fn nice_agent_set_remote_credentials(agent: *mut NiceAgent, stream_id: c_uint, ufrag: *const c_char, pwd: *const c_char) -> gboolean;
-    pub fn nice_agent_set_selected_pair(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, lfoundation: *const c_char, rfoundation: *const c_char) -> gboolean;
-    pub fn nice_agent_set_selected_remote_candidate(agent: *mut NiceAgent, stream_id: c_uint, component_id: c_uint, candidate: *mut NiceCandidate) -> gboolean;
+    pub fn nice_agent_send_messages_nonblocking(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        messages: *const NiceOutputMessage,
+        n_messages: c_uint,
+        cancellable: *mut gio::GCancellable,
+        error: *mut *mut glib::GError,
+    ) -> c_int;
+    pub fn nice_agent_set_local_credentials(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        ufrag: *const c_char,
+        pwd: *const c_char,
+    ) -> gboolean;
+    pub fn nice_agent_set_port_range(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        min_port: c_uint,
+        max_port: c_uint,
+    );
+    pub fn nice_agent_set_relay_info(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        server_ip: *const c_char,
+        server_port: c_uint,
+        username: *const c_char,
+        password: *const c_char,
+        type_: NiceRelayType,
+    ) -> gboolean;
+    pub fn nice_agent_set_remote_candidates(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        candidates: *const glib::GSList,
+    ) -> c_int;
+    pub fn nice_agent_set_remote_credentials(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        ufrag: *const c_char,
+        pwd: *const c_char,
+    ) -> gboolean;
+    pub fn nice_agent_set_selected_pair(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        lfoundation: *const c_char,
+        rfoundation: *const c_char,
+    ) -> gboolean;
+    pub fn nice_agent_set_selected_remote_candidate(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        component_id: c_uint,
+        candidate: *mut NiceCandidate,
+    ) -> gboolean;
     pub fn nice_agent_set_software(agent: *mut NiceAgent, software: *const c_char);
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    pub fn nice_agent_set_stream_name(agent: *mut NiceAgent, stream_id: c_uint, name: *const c_char) -> gboolean;
+    pub fn nice_agent_set_stream_name(
+        agent: *mut NiceAgent,
+        stream_id: c_uint,
+        name: *const c_char,
+    ) -> gboolean;
     pub fn nice_agent_set_stream_tos(agent: *mut NiceAgent, stream_id: c_uint, tos: c_int);
 
 }

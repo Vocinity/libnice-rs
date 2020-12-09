@@ -3,7 +3,7 @@
 // DO NOT EDIT
 
 mod agent;
-pub use self::agent::{Agent};
+pub use self::agent::Agent;
 
 mod candidate;
 pub use self::candidate::Candidate;
@@ -26,5 +26,4 @@ mod flags;
 pub use self::flags::AgentOption;
 
 #[doc(hidden)]
-pub mod traits {
-}
+pub mod traits {}

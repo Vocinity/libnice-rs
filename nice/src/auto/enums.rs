@@ -10,15 +10,14 @@ use glib::StaticType;
 use glib::Type;
 use std::fmt;
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum CandidateTransport {
     Udp,
     TcpActive,
     TcpPassive,
     TcpSo,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
@@ -28,21 +27,23 @@ impl CandidateTransport {
     #[doc(alias = "nice_candidate_transport_to_string")]
     pub fn to_str(self) -> Option<glib::GString> {
         assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_transport_to_string(self.to_glib()))
-        }
+        unsafe { from_glib_none(ffi::nice_candidate_transport_to_string(self.to_glib())) }
     }
 }
 
 impl fmt::Display for CandidateTransport {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "CandidateTransport::{}", match *self {
-            CandidateTransport::Udp => "Udp",
-            CandidateTransport::TcpActive => "TcpActive",
-            CandidateTransport::TcpPassive => "TcpPassive",
-            CandidateTransport::TcpSo => "TcpSo",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "CandidateTransport::{}",
+            match *self {
+                CandidateTransport::Udp => "Udp",
+                CandidateTransport::TcpActive => "TcpActive",
+                CandidateTransport::TcpPassive => "TcpPassive",
+                CandidateTransport::TcpSo => "TcpSo",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -57,7 +58,7 @@ impl ToGlib for CandidateTransport {
             CandidateTransport::TcpPassive => ffi::NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE,
             CandidateTransport::TcpSo => ffi::NICE_CANDIDATE_TRANSPORT_TCP_SO,
             CandidateTransport::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -71,7 +72,7 @@ impl FromGlib<ffi::NiceCandidateTransport> for CandidateTransport {
             2 => CandidateTransport::TcpPassive,
             3 => CandidateTransport::TcpSo,
             value => CandidateTransport::__Unknown(value),
-}
+        }
     }
 }
 
@@ -99,15 +100,14 @@ impl SetValue for CandidateTransport {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum CandidateType {
     Host,
     ServerReflexive,
     PeerReflexive,
     Relayed,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
@@ -117,21 +117,23 @@ impl CandidateType {
     #[doc(alias = "nice_candidate_type_to_string")]
     pub fn to_str(self) -> Option<glib::GString> {
         assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_type_to_string(self.to_glib()))
-        }
+        unsafe { from_glib_none(ffi::nice_candidate_type_to_string(self.to_glib())) }
     }
 }
 
 impl fmt::Display for CandidateType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "CandidateType::{}", match *self {
-            CandidateType::Host => "Host",
-            CandidateType::ServerReflexive => "ServerReflexive",
-            CandidateType::PeerReflexive => "PeerReflexive",
-            CandidateType::Relayed => "Relayed",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "CandidateType::{}",
+            match *self {
+                CandidateType::Host => "Host",
+                CandidateType::ServerReflexive => "ServerReflexive",
+                CandidateType::PeerReflexive => "PeerReflexive",
+                CandidateType::Relayed => "Relayed",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -146,7 +148,7 @@ impl ToGlib for CandidateType {
             CandidateType::PeerReflexive => ffi::NICE_CANDIDATE_TYPE_PEER_REFLEXIVE,
             CandidateType::Relayed => ffi::NICE_CANDIDATE_TYPE_RELAYED,
             CandidateType::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -160,7 +162,7 @@ impl FromGlib<ffi::NiceCandidateType> for CandidateType {
             2 => CandidateType::PeerReflexive,
             3 => CandidateType::Relayed,
             value => CandidateType::__Unknown(value),
-}
+        }
     }
 }
 
@@ -188,8 +190,7 @@ impl SetValue for CandidateType {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum Compatibility {
     Rfc5245,
@@ -198,21 +199,25 @@ pub enum Compatibility {
     Wlm2009,
     Oc2007,
     Oc2007r2,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for Compatibility {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Compatibility::{}", match *self {
-            Compatibility::Rfc5245 => "Rfc5245",
-            Compatibility::Google => "Google",
-            Compatibility::Msn => "Msn",
-            Compatibility::Wlm2009 => "Wlm2009",
-            Compatibility::Oc2007 => "Oc2007",
-            Compatibility::Oc2007r2 => "Oc2007r2",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "Compatibility::{}",
+            match *self {
+                Compatibility::Rfc5245 => "Rfc5245",
+                Compatibility::Google => "Google",
+                Compatibility::Msn => "Msn",
+                Compatibility::Wlm2009 => "Wlm2009",
+                Compatibility::Oc2007 => "Oc2007",
+                Compatibility::Oc2007r2 => "Oc2007r2",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -229,7 +234,7 @@ impl ToGlib for Compatibility {
             Compatibility::Oc2007 => ffi::NICE_COMPATIBILITY_OC2007,
             Compatibility::Oc2007r2 => ffi::NICE_COMPATIBILITY_OC2007R2,
             Compatibility::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -245,7 +250,7 @@ impl FromGlib<ffi::NiceCompatibility> for Compatibility {
             4 => Compatibility::Oc2007,
             5 => Compatibility::Oc2007r2,
             value => Compatibility::__Unknown(value),
-}
+        }
     }
 }
 
@@ -273,8 +278,7 @@ impl SetValue for Compatibility {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum ComponentState {
     Disconnected,
@@ -283,7 +287,7 @@ pub enum ComponentState {
     Connected,
     Ready,
     Failed,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
@@ -293,23 +297,25 @@ impl ComponentState {
     #[doc(alias = "nice_component_state_to_string")]
     pub fn to_str(self) -> Option<glib::GString> {
         assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_component_state_to_string(self.to_glib()))
-        }
+        unsafe { from_glib_none(ffi::nice_component_state_to_string(self.to_glib())) }
     }
 }
 
 impl fmt::Display for ComponentState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ComponentState::{}", match *self {
-            ComponentState::Disconnected => "Disconnected",
-            ComponentState::Gathering => "Gathering",
-            ComponentState::Connecting => "Connecting",
-            ComponentState::Connected => "Connected",
-            ComponentState::Ready => "Ready",
-            ComponentState::Failed => "Failed",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ComponentState::{}",
+            match *self {
+                ComponentState::Disconnected => "Disconnected",
+                ComponentState::Gathering => "Gathering",
+                ComponentState::Connecting => "Connecting",
+                ComponentState::Connected => "Connected",
+                ComponentState::Ready => "Ready",
+                ComponentState::Failed => "Failed",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -326,7 +332,7 @@ impl ToGlib for ComponentState {
             ComponentState::Ready => ffi::NICE_COMPONENT_STATE_READY,
             ComponentState::Failed => ffi::NICE_COMPONENT_STATE_FAILED,
             ComponentState::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -342,7 +348,7 @@ impl FromGlib<ffi::NiceComponentState> for ComponentState {
             4 => ComponentState::Ready,
             5 => ComponentState::Failed,
             value => ComponentState::__Unknown(value),
-}
+        }
     }
 }
 
@@ -370,23 +376,26 @@ impl SetValue for ComponentState {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum ComponentType {
     Rtp,
     Rtcp,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for ComponentType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ComponentType::{}", match *self {
-            ComponentType::Rtp => "Rtp",
-            ComponentType::Rtcp => "Rtcp",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ComponentType::{}",
+            match *self {
+                ComponentType::Rtp => "Rtp",
+                ComponentType::Rtcp => "Rtcp",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -399,7 +408,7 @@ impl ToGlib for ComponentType {
             ComponentType::Rtp => ffi::NICE_COMPONENT_TYPE_RTP,
             ComponentType::Rtcp => ffi::NICE_COMPONENT_TYPE_RTCP,
             ComponentType::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -411,7 +420,7 @@ impl FromGlib<ffi::NiceComponentType> for ComponentType {
             1 => ComponentType::Rtp,
             2 => ComponentType::Rtcp,
             value => ComponentType::__Unknown(value),
-}
+        }
     }
 }
 
@@ -441,13 +450,12 @@ impl SetValue for ComponentType {
 
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum NominationMode {
     Regular,
     Aggressive,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
@@ -455,11 +463,15 @@ pub enum NominationMode {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 impl fmt::Display for NominationMode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "NominationMode::{}", match *self {
-            NominationMode::Regular => "Regular",
-            NominationMode::Aggressive => "Aggressive",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "NominationMode::{}",
+            match *self {
+                NominationMode::Regular => "Regular",
+                NominationMode::Aggressive => "Aggressive",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -474,7 +486,7 @@ impl ToGlib for NominationMode {
             NominationMode::Regular => ffi::NICE_NOMINATION_MODE_REGULAR,
             NominationMode::Aggressive => ffi::NICE_NOMINATION_MODE_AGGRESSIVE,
             NominationMode::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -488,7 +500,7 @@ impl FromGlib<ffi::NiceNominationMode> for NominationMode {
             0 => NominationMode::Regular,
             1 => NominationMode::Aggressive,
             value => NominationMode::__Unknown(value),
-}
+        }
     }
 }
 
@@ -524,25 +536,28 @@ impl SetValue for NominationMode {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum ProxyType {
     None,
     Socks5,
     Http,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for ProxyType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ProxyType::{}", match *self {
-            ProxyType::None => "None",
-            ProxyType::Socks5 => "Socks5",
-            ProxyType::Http => "Http",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ProxyType::{}",
+            match *self {
+                ProxyType::None => "None",
+                ProxyType::Socks5 => "Socks5",
+                ProxyType::Http => "Http",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -556,7 +571,7 @@ impl ToGlib for ProxyType {
             ProxyType::Socks5 => ffi::NICE_PROXY_TYPE_SOCKS5,
             ProxyType::Http => ffi::NICE_PROXY_TYPE_HTTP,
             ProxyType::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -569,7 +584,7 @@ impl FromGlib<ffi::NiceProxyType> for ProxyType {
             1 => ProxyType::Socks5,
             2 => ProxyType::Http,
             value => ProxyType::__Unknown(value),
-}
+        }
     }
 }
 
@@ -597,25 +612,28 @@ impl SetValue for ProxyType {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 pub enum RelayType {
     Udp,
     Tcp,
     Tls,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for RelayType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "RelayType::{}", match *self {
-            RelayType::Udp => "Udp",
-            RelayType::Tcp => "Tcp",
-            RelayType::Tls => "Tls",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "RelayType::{}",
+            match *self {
+                RelayType::Udp => "Udp",
+                RelayType::Tcp => "Tcp",
+                RelayType::Tls => "Tls",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -629,7 +647,7 @@ impl ToGlib for RelayType {
             RelayType::Tcp => ffi::NICE_RELAY_TYPE_TURN_TCP,
             RelayType::Tls => ffi::NICE_RELAY_TYPE_TURN_TLS,
             RelayType::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -642,7 +660,7 @@ impl FromGlib<ffi::NiceRelayType> for RelayType {
             1 => RelayType::Tcp,
             2 => RelayType::Tls,
             value => RelayType::__Unknown(value),
-}
+        }
     }
 }
 
@@ -669,4 +687,3 @@ impl SetValue for RelayType {
         glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
     }
 }
-

@@ -20,9 +20,7 @@ impl Candidate {
     #[doc(alias = "nice_candidate_new")]
     pub fn new(type_: CandidateType) -> Candidate {
         assert_initialized_main_thread!();
-        unsafe {
-            from_glib_full(ffi::nice_candidate_new(type_.to_glib()))
-        }
+        unsafe { from_glib_full(ffi::nice_candidate_new(type_.to_glib())) }
     }
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
@@ -30,7 +28,10 @@ impl Candidate {
     #[doc(alias = "nice_candidate_equal_target")]
     pub fn equal_target(&self, candidate2: &Candidate) -> bool {
         unsafe {
-            from_glib(ffi::nice_candidate_equal_target(self.to_glib_none().0, candidate2.to_glib_none().0))
+            from_glib(ffi::nice_candidate_equal_target(
+                self.to_glib_none().0,
+                candidate2.to_glib_none().0,
+            ))
         }
     }
 }
