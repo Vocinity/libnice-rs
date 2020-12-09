@@ -68,9 +68,9 @@ impl Agent {
     }
 
     #[doc(alias = "nice_agent_attach_recv")]
-    pub fn attach_recv<P: Fn(&Agent, u32, u32, u32, &str) + 'static>(&self, stream_id: u32, component_id: u32, ctx: &glib::MainContext, func: P) -> bool {
+    pub fn attach_recv<P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static>(&self, stream_id: u32, component_id: u32, ctx: &glib::MainContext, func: P) -> bool {
         let func_data: Box_<P> = Box_::new(func);
-        unsafe extern "C" fn func_func<P: Fn(&Agent, u32, u32, u32, &str) + 'static>(agent: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, len: libc::c_uint, buf: *mut libc::c_char, user_data: glib::ffi::gpointer) {
+        unsafe extern "C" fn func_func<P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static>(agent: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, len: libc::c_uint, buf: *mut libc::c_char, user_data: glib::ffi::gpointer) {
             let agent = from_glib_borrow(agent);
             let buf: Borrowed<glib::GString> = from_glib_borrow(buf);
             let callback: &P = &*(user_data as *mut _);
@@ -751,8 +751,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_candidate_gathering_done<F: Fn(&Agent, u32) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn candidate_gathering_done_trampoline<F: Fn(&Agent, u32) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_candidate_gathering_done<F: Fn(&Agent, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn candidate_gathering_done_trampoline<F: Fn(&Agent, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id)
         }
@@ -763,8 +763,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_component_state_changed<F: Fn(&Agent, u32, u32, u32) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn component_state_changed_trampoline<F: Fn(&Agent, u32, u32, u32) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, state: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_component_state_changed<F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn component_state_changed_trampoline<F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, state: libc::c_uint, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id, state)
         }
@@ -775,8 +775,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_initial_binding_request_received<F: Fn(&Agent, u32) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn initial_binding_request_received_trampoline<F: Fn(&Agent, u32) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_initial_binding_request_received<F: Fn(&Agent, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn initial_binding_request_received_trampoline<F: Fn(&Agent, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id)
         }
@@ -788,8 +788,8 @@ impl Agent {
     }
 
     #[cfg_attr(feature = "v0_1_8", deprecated)]
-    pub fn connect_new_candidate<F: Fn(&Agent, u32, u32, &str) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(foundation))
         }
@@ -807,8 +807,8 @@ impl Agent {
     //}
 
     #[cfg_attr(feature = "v0_1_8", deprecated)]
-    pub fn connect_new_remote_candidate<F: Fn(&Agent, u32, u32, &str) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_remote_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_remote_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_remote_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(foundation))
         }
@@ -826,8 +826,8 @@ impl Agent {
     //}
 
     #[cfg_attr(feature = "v0_1_8", deprecated)]
-    pub fn connect_new_selected_pair<F: Fn(&Agent, u32, u32, &str, &str) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_selected_pair_trampoline<F: Fn(&Agent, u32, u32, &str, &str) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, lfoundation: *mut libc::c_char, rfoundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_selected_pair<F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_selected_pair_trampoline<F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, lfoundation: *mut libc::c_char, rfoundation: *mut libc::c_char, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(lfoundation), &glib::GString::from_glib_borrow(rfoundation))
         }
@@ -845,8 +845,8 @@ impl Agent {
     //    Ignored rcandidate: Nice.Candidate
     //}
 
-    pub fn connect_reliable_transport_writable<F: Fn(&Agent, u32, u32) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn reliable_transport_writable_trampoline<F: Fn(&Agent, u32, u32) + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_reliable_transport_writable<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn reliable_transport_writable_trampoline<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id)
         }
@@ -865,8 +865,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    pub fn connect_property_bytestream_tcp_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_bytestream_tcp_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_bytestream_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_bytestream_tcp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -877,8 +877,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_controlling_mode_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_controlling_mode_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_controlling_mode_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_controlling_mode_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -891,8 +891,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_14", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_14")))]
-    pub fn connect_property_force_relay_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_force_relay_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_force_relay_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_force_relay_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -905,8 +905,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    pub fn connect_property_ice_tcp_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_tcp_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_ice_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_tcp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -919,8 +919,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_16", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_16")))]
-    pub fn connect_property_ice_trickle_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_trickle_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_ice_trickle_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_trickle_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -933,8 +933,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    pub fn connect_property_ice_udp_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_udp_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_ice_udp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_udp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -947,8 +947,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_17", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_17")))]
-    pub fn connect_property_idle_timeout_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_idle_timeout_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_idle_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_idle_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -961,8 +961,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    pub fn connect_property_keepalive_conncheck_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_keepalive_conncheck_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_keepalive_conncheck_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_keepalive_conncheck_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -973,8 +973,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_max_connectivity_checks_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_max_connectivity_checks_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_max_connectivity_checks_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_max_connectivity_checks_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -985,8 +985,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_proxy_ip_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_ip_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_proxy_ip_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_ip_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -997,8 +997,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_proxy_password_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_password_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_proxy_password_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_password_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1009,8 +1009,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_proxy_port_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_port_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_proxy_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_port_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1021,8 +1021,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_proxy_type_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_type_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_proxy_type_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_type_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1033,8 +1033,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_proxy_username_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_username_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_proxy_username_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_username_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1047,8 +1047,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    pub fn connect_property_stun_initial_timeout_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_initial_timeout_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_initial_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_initial_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1061,8 +1061,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    pub fn connect_property_stun_max_retransmissions_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_max_retransmissions_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_max_retransmissions_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_max_retransmissions_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1073,8 +1073,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_stun_pacing_timer_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_pacing_timer_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_pacing_timer_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_pacing_timer_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1087,8 +1087,8 @@ impl Agent {
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    pub fn connect_property_stun_reliable_timeout_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_reliable_timeout_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_reliable_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_reliable_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1099,8 +1099,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_stun_server_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_server_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_server_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_server_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1111,8 +1111,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_stun_server_port_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_server_port_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_stun_server_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_server_port_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1123,8 +1123,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_support_renomination_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_support_renomination_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_support_renomination_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_support_renomination_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1135,8 +1135,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_upnp_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_upnp_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_upnp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_upnp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1147,8 +1147,8 @@ impl Agent {
         }
     }
 
-    pub fn connect_property_upnp_timeout_notify<F: Fn(&Agent) + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_upnp_timeout_trampoline<F: Fn(&Agent) + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_property_upnp_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn notify_upnp_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
@@ -1159,6 +1159,9 @@ impl Agent {
         }
     }
 }
+
+unsafe impl Send for Agent {}
+unsafe impl Sync for Agent {}
 
 impl fmt::Display for Agent {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
