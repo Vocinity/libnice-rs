@@ -17,7 +17,6 @@ external_libraries = [
 ]
 
 generate = [
-  "Nice.Agent",
   "Nice.ComponentType",
   "Nice.Compatibility",
   "Nice.AgentOption",
@@ -36,6 +35,21 @@ manual = [
   "Gio.Cancellable",
   "Gio.IOStream"
 ]
+
+[[object]]
+name = "Nice.Agent"
+status = "generate"
+
+    [[object.function]]
+    name = "recv"
+    # compiler error: generated Vec<u8>::uninit, required Vec::<u8>
+    manual = true
+
+    [[object.function]]
+    name = "recv_nonblocking"
+    # compiler error: generated Vec<u8>::uninit, required Vec::<u8>
+    manual = true
+
 
 [[object]]
 name = "Nice.ComponentState"
