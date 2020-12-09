@@ -4,6 +4,7 @@ impl ::std::fmt::Debug for sockaddr {
          .finish()
     }
 }
+#[repr(transparent)]
 #[derive(Copy, Clone)]
 pub struct sockaddr(libc::sockaddr);
 
@@ -13,6 +14,7 @@ impl ::std::fmt::Debug for sockaddr_in {
          .finish()
     }
 }
+#[repr(transparent)]
 #[derive(Copy, Clone)]
 pub struct sockaddr_in(libc::sockaddr_in);
 
@@ -22,5 +24,6 @@ impl ::std::fmt::Debug for sockaddr_in6 {
          .finish()
     }
 }
+#[repr(transparent)]
 #[derive(Copy, Clone)]
 pub struct sockaddr_in6(libc::sockaddr_in6);
