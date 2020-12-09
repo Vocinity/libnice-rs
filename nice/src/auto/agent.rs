@@ -9,6 +9,9 @@ use crate::Compatibility;
 #[cfg(any(feature = "v0_1_8", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
 use crate::ComponentState;
+#[cfg(any(feature = "v0_1_15", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+use crate::NominationMode;
 use crate::RelayType;
 use glib::object::ObjectType as ObjectType_;
 use glib::signal::connect_raw;
@@ -532,6 +535,16 @@ impl Agent {
     pub fn set_property_max_connectivity_checks(&self, max_connectivity_checks: u32) {
         unsafe {
             glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"max-connectivity-checks\0".as_ptr() as *const _, glib::Value::from(&max_connectivity_checks).to_glib_none().0);
+        }
+    }
+
+    #[cfg(any(feature = "v0_1_15", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+    pub fn get_property_nomination_mode(&self) -> NominationMode {
+        unsafe {
+            let mut value = glib::Value::from_type(<NominationMode as StaticType>::static_type());
+            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"nomination-mode\0".as_ptr() as *const _, value.to_glib_none_mut().0);
+            value.get().expect("Return Value for property `nomination-mode` getter").unwrap()
         }
     }
 

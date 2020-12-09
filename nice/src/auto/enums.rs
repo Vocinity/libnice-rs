@@ -3,6 +3,11 @@
 // DO NOT EDIT
 
 use glib::translate::*;
+use glib::value::FromValue;
+use glib::value::FromValueOptional;
+use glib::value::SetValue;
+use glib::StaticType;
+use glib::Type;
 use std::fmt;
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
@@ -15,6 +20,18 @@ pub enum CandidateTransport {
     TcpSo,
 #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl CandidateTransport {
+    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
+    #[doc(alias = "nice_candidate_transport_to_string")]
+    pub fn to_str(self) -> Option<glib::GString> {
+        assert_initialized_main_thread!();
+        unsafe {
+            from_glib_none(ffi::nice_candidate_transport_to_string(self.to_glib()))
+        }
+    }
 }
 
 impl fmt::Display for CandidateTransport {
@@ -58,6 +75,30 @@ impl FromGlib<ffi::NiceCandidateTransport> for CandidateTransport {
     }
 }
 
+impl StaticType for CandidateTransport {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_candidate_transport_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for CandidateTransport {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for CandidateTransport {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for CandidateTransport {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
@@ -68,6 +109,18 @@ pub enum CandidateType {
     Relayed,
 #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl CandidateType {
+    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
+    #[doc(alias = "nice_candidate_type_to_string")]
+    pub fn to_str(self) -> Option<glib::GString> {
+        assert_initialized_main_thread!();
+        unsafe {
+            from_glib_none(ffi::nice_candidate_type_to_string(self.to_glib()))
+        }
+    }
 }
 
 impl fmt::Display for CandidateType {
@@ -108,6 +161,30 @@ impl FromGlib<ffi::NiceCandidateType> for CandidateType {
             3 => CandidateType::Relayed,
             value => CandidateType::__Unknown(value),
 }
+    }
+}
+
+impl StaticType for CandidateType {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_candidate_type_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for CandidateType {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for CandidateType {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for CandidateType {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
     }
 }
 
@@ -172,6 +249,30 @@ impl FromGlib<ffi::NiceCompatibility> for Compatibility {
     }
 }
 
+impl StaticType for Compatibility {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_compatibility_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for Compatibility {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for Compatibility {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for Compatibility {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
@@ -185,6 +286,18 @@ pub enum ComponentState {
     Last,
 #[doc(hidden)]
     __Unknown(i32),
+}
+
+impl ComponentState {
+    #[cfg(any(feature = "v0_1_6", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_6")))]
+    #[doc(alias = "nice_component_state_to_string")]
+    pub fn to_str(self) -> Option<glib::GString> {
+        assert_initialized_main_thread!();
+        unsafe {
+            from_glib_none(ffi::nice_component_state_to_string(self.to_glib()))
+        }
+    }
 }
 
 impl fmt::Display for ComponentState {
@@ -237,6 +350,30 @@ impl FromGlib<ffi::NiceComponentState> for ComponentState {
     }
 }
 
+impl StaticType for ComponentState {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_component_state_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for ComponentState {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for ComponentState {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for ComponentState {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
@@ -279,6 +416,30 @@ impl FromGlib<ffi::NiceComponentType> for ComponentType {
             2 => ComponentType::Rtcp,
             value => ComponentType::__Unknown(value),
 }
+    }
+}
+
+impl StaticType for ComponentType {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_component_type_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for ComponentType {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for ComponentType {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for ComponentType {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
     }
 }
 
@@ -335,6 +496,38 @@ impl FromGlib<ffi::NiceNominationMode> for NominationMode {
     }
 }
 
+#[cfg(any(feature = "v0_1_15", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+impl StaticType for NominationMode {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_nomination_mode_get_type()) }
+    }
+}
+
+#[cfg(any(feature = "v0_1_15", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+impl<'a> FromValueOptional<'a> for NominationMode {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+#[cfg(any(feature = "v0_1_15", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+impl<'a> FromValue<'a> for NominationMode {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+#[cfg(any(feature = "v0_1_15", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+impl SetValue for NominationMode {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
@@ -384,6 +577,30 @@ impl FromGlib<ffi::NiceProxyType> for ProxyType {
     }
 }
 
+impl StaticType for ProxyType {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_proxy_type_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for ProxyType {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for ProxyType {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for ProxyType {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
+    }
+}
+
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
 #[derive(Clone, Copy)]
 #[non_exhaustive]
@@ -430,6 +647,30 @@ impl FromGlib<ffi::NiceRelayType> for RelayType {
             2 => RelayType::Tls,
             value => RelayType::__Unknown(value),
 }
+    }
+}
+
+impl StaticType for RelayType {
+    fn static_type() -> Type {
+        unsafe { from_glib(ffi::nice_relay_type_get_type()) }
+    }
+}
+
+impl<'a> FromValueOptional<'a> for RelayType {
+    unsafe fn from_value_optional(value: &glib::Value) -> Option<Self> {
+        Some(FromValue::from_value(value))
+    }
+}
+
+impl<'a> FromValue<'a> for RelayType {
+    unsafe fn from_value(value: &glib::Value) -> Self {
+        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
+    }
+}
+
+impl SetValue for RelayType {
+    unsafe fn set_value(value: &mut glib::Value, this: &Self) {
+        glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, this.to_glib())
     }
 }
 
