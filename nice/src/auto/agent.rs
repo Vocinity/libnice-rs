@@ -13,6 +13,9 @@ use crate::ComponentState;
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 use crate::NominationMode;
 use crate::RelayType;
+#[cfg(any(feature = "v0_1_5", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+use glib::object::IsA;
 use glib::object::ObjectType as ObjectType_;
 use glib::signal::connect_raw;
 use glib::signal::SignalHandlerId;
@@ -20,6 +23,9 @@ use glib::translate::*;
 use glib::StaticType;
 use std::boxed::Box as Box_;
 use std::fmt;
+#[cfg(any(feature = "v0_1_5", feature = "dox"))]
+#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+use std::mem;
 use std::mem::transmute;
 use std::ptr;
 
@@ -148,12 +154,14 @@ impl Agent {
     //    unsafe { TODO: call ffi:nice_agent_get_default_local_candidate() }
     //}
 
-    //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    //#[doc(alias = "nice_agent_get_io_stream")]
-    //pub fn get_io_stream(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Option<gio::IOStream> {
-    //    unsafe { TODO: call ffi:nice_agent_get_io_stream() }
-    //}
+    #[cfg(any(feature = "v0_1_5", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+    #[doc(alias = "nice_agent_get_io_stream")]
+    pub fn get_io_stream(&self, stream_id: u32, component_id: u32) -> Option<gio::IOStream> {
+        unsafe {
+            from_glib_full(ffi::nice_agent_get_io_stream(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
     //#[doc(alias = "nice_agent_get_local_candidates")]
     //pub fn get_local_candidates(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Vec<Candidate> {
@@ -180,19 +188,23 @@ impl Agent {
     //    unsafe { TODO: call ffi:nice_agent_get_selected_pair() }
     //}
 
-    //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    //#[doc(alias = "nice_agent_get_selected_socket")]
-    //pub fn get_selected_socket(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Option<gio::Socket> {
-    //    unsafe { TODO: call ffi:nice_agent_get_selected_socket() }
-    //}
+    #[cfg(any(feature = "v0_1_5", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+    #[doc(alias = "nice_agent_get_selected_socket")]
+    pub fn get_selected_socket(&self, stream_id: u32, component_id: u32) -> Option<gio::Socket> {
+        unsafe {
+            from_glib_full(ffi::nice_agent_get_selected_socket(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
-    //#[cfg(any(feature = "v0_1_17", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_17")))]
-    //#[doc(alias = "nice_agent_get_sockets")]
-    //pub fn get_sockets(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Vec<gio::Socket> {
-    //    unsafe { TODO: call ffi:nice_agent_get_sockets() }
-    //}
+    #[cfg(any(feature = "v0_1_17", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_17")))]
+    #[doc(alias = "nice_agent_get_sockets")]
+    pub fn get_sockets(&self, stream_id: u32, component_id: u32) -> Vec<gio::Socket> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_sockets(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
@@ -235,33 +247,47 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    //#[doc(alias = "nice_agent_recv")]
-    //pub fn recv(&self, stream_id: u32, component_id: u32, cancellable: /*Ignored*/Option<&gio::Cancellable>, error: /*Ignored*/Option<glib::Error>) -> Result<isize, Vec<u8>, glib::Error> {
-    //    unsafe { TODO: call ffi:nice_agent_recv() }
-    //}
+    #[cfg(any(feature = "v0_1_5", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+    #[doc(alias = "nice_agent_recv")]
+    pub fn recv<P: IsA<gio::Cancellable>>(&self, stream_id: u32, component_id: u32, cancellable: Option<&P>) -> Result<(isize, Vec<u8>), glib::Error> {
+        unsafe {
+            let mut buf = Vec<u8>::uninitialized();
+            let mut buf_len = mem::MaybeUninit::uninit();
+            let mut error = ptr::null_mut();
+            let ret = ffi::nice_agent_recv(self.to_glib_none().0, stream_id, component_id, buf.to_glib_none_mut().0, buf_len.as_mut_ptr(), cancellable.map(|p| p.as_ref()).to_glib_none().0, &mut error);
+            let buf_len = buf_len.assume_init();
+            if error.is_null() { Ok((ret, buf)) } else { Err(from_glib_full(error)) }
+        }
+    }
 
     //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
     //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
     //#[doc(alias = "nice_agent_recv_messages")]
-    //pub fn recv_messages(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/Vec<InputMessage>, cancellable: /*Ignored*/Option<&gio::Cancellable>, error: /*Ignored*/Option<glib::Error>) -> Result<i32, u32, glib::Error> {
+    //pub fn recv_messages<P: IsA<gio::Cancellable>>(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/Vec<InputMessage>, cancellable: Option<&P>) -> Result<(i32, u32), glib::Error> {
     //    unsafe { TODO: call ffi:nice_agent_recv_messages() }
     //}
 
     //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
     //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
     //#[doc(alias = "nice_agent_recv_messages_nonblocking")]
-    //pub fn recv_messages_nonblocking(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/Vec<InputMessage>, cancellable: /*Ignored*/Option<&gio::Cancellable>, error: /*Ignored*/Option<glib::Error>) -> Result<i32, u32, glib::Error> {
+    //pub fn recv_messages_nonblocking<P: IsA<gio::Cancellable>>(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/Vec<InputMessage>, cancellable: Option<&P>) -> Result<(i32, u32), glib::Error> {
     //    unsafe { TODO: call ffi:nice_agent_recv_messages_nonblocking() }
     //}
 
-    //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
-    //#[doc(alias = "nice_agent_recv_nonblocking")]
-    //pub fn recv_nonblocking(&self, stream_id: u32, component_id: u32, cancellable: /*Ignored*/Option<&gio::Cancellable>, error: /*Ignored*/Option<glib::Error>) -> Result<isize, Vec<u8>, glib::Error> {
-    //    unsafe { TODO: call ffi:nice_agent_recv_nonblocking() }
-    //}
+    #[cfg(any(feature = "v0_1_5", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
+    #[doc(alias = "nice_agent_recv_nonblocking")]
+    pub fn recv_nonblocking<P: IsA<gio::Cancellable>>(&self, stream_id: u32, component_id: u32, cancellable: Option<&P>) -> Result<(isize, Vec<u8>), glib::Error> {
+        unsafe {
+            let mut buf = Vec<u8>::uninitialized();
+            let mut buf_len = mem::MaybeUninit::uninit();
+            let mut error = ptr::null_mut();
+            let ret = ffi::nice_agent_recv_nonblocking(self.to_glib_none().0, stream_id, component_id, buf.to_glib_none_mut().0, buf_len.as_mut_ptr(), cancellable.map(|p| p.as_ref()).to_glib_none().0, &mut error);
+            let buf_len = buf_len.assume_init();
+            if error.is_null() { Ok((ret, buf)) } else { Err(from_glib_full(error)) }
+        }
+    }
 
     #[doc(alias = "nice_agent_remove_stream")]
     pub fn remove_stream(&self, stream_id: u32) {
@@ -296,7 +322,7 @@ impl Agent {
     //#[cfg(any(feature = "v0_1_5", feature = "dox"))]
     //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
     //#[doc(alias = "nice_agent_send_messages_nonblocking")]
-    //pub fn send_messages_nonblocking(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/&[&OutputMessage], cancellable: /*Ignored*/Option<&gio::Cancellable>, error: /*Ignored*/Option<glib::Error>) -> i32 {
+    //pub fn send_messages_nonblocking<P: IsA<gio::Cancellable>>(&self, stream_id: u32, component_id: u32, messages: /*Ignored*/&[&OutputMessage], cancellable: Option<&P>) -> Result<i32, glib::Error> {
     //    unsafe { TODO: call ffi:nice_agent_send_messages_nonblocking() }
     //}
 

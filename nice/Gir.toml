@@ -29,7 +29,12 @@ generate = [
 ]
 
 manual = [
-  "GLib.MainContext"
+  "GLib.MainContext",
+  "GLib.Error",
+  "Gio.AsyncReadyCallback",
+  "Gio.Socket",
+  "Gio.Cancellable",
+  "Gio.IOStream"
 ]
 
 [[object]]
