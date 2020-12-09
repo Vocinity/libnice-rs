@@ -1,5 +1,5 @@
 [package]
-name = "nice-sys"
+name = "n-sys"
 version = "0.1.0"
 links = "\"nice\""
 edition = "2018"
