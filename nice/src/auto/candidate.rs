@@ -2,9 +2,6 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-#[cfg(any(feature = "v0_1_18", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
-use crate::CandidateTransport;
 use crate::CandidateType;
 use glib::translate::*;
 
@@ -36,24 +33,7 @@ impl Candidate {
             from_glib(ffi::nice_candidate_equal_target(self.to_glib_none().0, candidate2.to_glib_none().0))
         }
     }
-
-    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
-    #[doc(alias = "nice_candidate_transport_to_string")]
-    pub fn transport_to_string(transport: CandidateTransport) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_transport_to_string(transport.to_glib()))
-        }
-    }
-
-    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
-    #[doc(alias = "nice_candidate_type_to_string")]
-    pub fn type_to_string(type_: CandidateType) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_type_to_string(type_.to_glib()))
-        }
-    }
 }
+
+unsafe impl Send for Candidate {}
+unsafe impl Sync for Candidate {}

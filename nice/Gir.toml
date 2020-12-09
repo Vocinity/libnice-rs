@@ -25,6 +25,7 @@ generate = [
   "Nice.CandidateTransport",
   "Nice.NominationMode",
   "Nice.ProxyType",
+  "Nice.Candidate",
 ]
 
 manual = [
@@ -50,6 +51,15 @@ status = "generate"
     # compiler error: generated Vec<u8>::uninit, required Vec::<u8>
     manual = true
 
+    [[object.function]]
+    name = "get_selected_pair"
+    # expected *-ptr, found struct `NiceCandidate`
+    ignore = true
+
+    [[object.function]]
+    name = "set_remote_candidates"
+    # no method named `to_glib_none` found for reference `&[&candidate::Candidate]` in the current scope
+    ignore = true
 
 [[object]]
 name = "Nice.ComponentState"

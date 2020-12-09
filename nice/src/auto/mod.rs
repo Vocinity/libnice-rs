@@ -5,6 +5,9 @@
 mod agent;
 pub use self::agent::{Agent};
 
+mod candidate;
+pub use self::candidate::Candidate;
+
 mod enums;
 pub use self::enums::CandidateTransport;
 pub use self::enums::CandidateType;

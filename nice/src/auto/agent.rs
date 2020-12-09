@@ -5,6 +5,7 @@
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 use crate::AgentOption;
+use crate::Candidate;
 use crate::Compatibility;
 #[cfg(any(feature = "v0_1_8", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
@@ -109,12 +110,14 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_4", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    //#[doc(alias = "nice_agent_generate_local_candidate_sdp")]
-    //pub fn generate_local_candidate_sdp(&self, candidate: /*Ignored*/&mut Candidate) -> Option<glib::GString> {
-    //    unsafe { TODO: call ffi:nice_agent_generate_local_candidate_sdp() }
-    //}
+    #[cfg(any(feature = "v0_1_4", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
+    #[doc(alias = "nice_agent_generate_local_candidate_sdp")]
+    pub fn generate_local_candidate_sdp(&self, candidate: &mut Candidate) -> Option<glib::GString> {
+        unsafe {
+            from_glib_full(ffi::nice_agent_generate_local_candidate_sdp(self.to_glib_none().0, candidate.to_glib_none_mut().0))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
@@ -143,10 +146,12 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_get_default_local_candidate")]
-    //pub fn get_default_local_candidate(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Option<Candidate> {
-    //    unsafe { TODO: call ffi:nice_agent_get_default_local_candidate() }
-    //}
+    #[doc(alias = "nice_agent_get_default_local_candidate")]
+    pub fn get_default_local_candidate(&self, stream_id: u32, component_id: u32) -> Option<Candidate> {
+        unsafe {
+            from_glib_full(ffi::nice_agent_get_default_local_candidate(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
@@ -157,10 +162,12 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_get_local_candidates")]
-    //pub fn get_local_candidates(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Vec<Candidate> {
-    //    unsafe { TODO: call ffi:nice_agent_get_local_candidates() }
-    //}
+    #[doc(alias = "nice_agent_get_local_candidates")]
+    pub fn get_local_candidates(&self, stream_id: u32, component_id: u32) -> Vec<Candidate> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_local_candidates(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
     #[doc(alias = "nice_agent_get_local_credentials")]
     pub fn get_local_credentials(&self, stream_id: u32) -> Option<(glib::GString, glib::GString)> {
@@ -172,15 +179,12 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_get_remote_candidates")]
-    //pub fn get_remote_candidates(&self, stream_id: u32, component_id: u32) -> /*Ignored*/Vec<Candidate> {
-    //    unsafe { TODO: call ffi:nice_agent_get_remote_candidates() }
-    //}
-
-    //#[doc(alias = "nice_agent_get_selected_pair")]
-    //pub fn get_selected_pair(&self, stream_id: u32, component_id: u32, local: /*Ignored*/&mut Candidate, remote: /*Ignored*/&mut Candidate) -> bool {
-    //    unsafe { TODO: call ffi:nice_agent_get_selected_pair() }
-    //}
+    #[doc(alias = "nice_agent_get_remote_candidates")]
+    pub fn get_remote_candidates(&self, stream_id: u32, component_id: u32) -> Vec<Candidate> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_remote_candidates(self.to_glib_none().0, stream_id, component_id))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_5", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_5")))]
@@ -209,12 +213,14 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_4", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    //#[doc(alias = "nice_agent_parse_remote_candidate_sdp")]
-    //pub fn parse_remote_candidate_sdp(&self, stream_id: u32, sdp: &str) -> /*Ignored*/Option<Candidate> {
-    //    unsafe { TODO: call ffi:nice_agent_parse_remote_candidate_sdp() }
-    //}
+    #[cfg(any(feature = "v0_1_4", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
+    #[doc(alias = "nice_agent_parse_remote_candidate_sdp")]
+    pub fn parse_remote_candidate_sdp(&self, stream_id: u32, sdp: &str) -> Option<Candidate> {
+        unsafe {
+            from_glib_full(ffi::nice_agent_parse_remote_candidate_sdp(self.to_glib_none().0, stream_id, sdp.to_glib_none().0))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
@@ -225,12 +231,14 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_4", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
-    //#[doc(alias = "nice_agent_parse_remote_stream_sdp")]
-    //pub fn parse_remote_stream_sdp(&self, stream_id: u32, sdp: &str, ufrag: &str, pwd: &str) -> /*Ignored*/Vec<Candidate> {
-    //    unsafe { TODO: call ffi:nice_agent_parse_remote_stream_sdp() }
-    //}
+    #[cfg(any(feature = "v0_1_4", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
+    #[doc(alias = "nice_agent_parse_remote_stream_sdp")]
+    pub fn parse_remote_stream_sdp(&self, stream_id: u32, sdp: &str, ufrag: &str, pwd: &str) -> Vec<Candidate> {
+        unsafe {
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_parse_remote_stream_sdp(self.to_glib_none().0, stream_id, sdp.to_glib_none().0, ufrag.to_glib_none().0, pwd.to_glib_none().0))
+        }
+    }
 
     #[cfg(any(feature = "v0_1_16", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_16")))]
@@ -313,11 +321,6 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_set_remote_candidates")]
-    //pub fn set_remote_candidates(&self, stream_id: u32, component_id: u32, candidates: /*Ignored*/&[&Candidate]) -> i32 {
-    //    unsafe { TODO: call ffi:nice_agent_set_remote_candidates() }
-    //}
-
     #[doc(alias = "nice_agent_set_remote_credentials")]
     pub fn set_remote_credentials(&self, stream_id: u32, ufrag: &str, pwd: &str) -> bool {
         unsafe {
@@ -332,10 +335,12 @@ impl Agent {
         }
     }
 
-    //#[doc(alias = "nice_agent_set_selected_remote_candidate")]
-    //pub fn set_selected_remote_candidate(&self, stream_id: u32, component_id: u32, candidate: /*Ignored*/&mut Candidate) -> bool {
-    //    unsafe { TODO: call ffi:nice_agent_set_selected_remote_candidate() }
-    //}
+    #[doc(alias = "nice_agent_set_selected_remote_candidate")]
+    pub fn set_selected_remote_candidate(&self, stream_id: u32, component_id: u32, candidate: &mut Candidate) -> bool {
+        unsafe {
+            from_glib(ffi::nice_agent_set_selected_remote_candidate(self.to_glib_none().0, stream_id, component_id, candidate.to_glib_none_mut().0))
+        }
+    }
 
     #[doc(alias = "nice_agent_set_software")]
     pub fn set_software(&self, software: &str) {
@@ -805,11 +810,19 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_8", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    //pub fn connect_new_candidate_full<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored candidate: Nice.Candidate
-    //}
+    #[cfg(any(feature = "v0_1_8", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
+    pub fn connect_new_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_candidate_full_trampoline<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, candidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+            let f: &F = &*(f as *const F);
+            f(&from_glib_borrow(this), &from_glib_borrow(candidate))
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(self.as_ptr() as *mut _, b"new-candidate-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(new_candidate_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+        }
+    }
 
     #[cfg_attr(feature = "v0_1_8", deprecated)]
     pub fn connect_new_remote_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
@@ -824,11 +837,19 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_8", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    //pub fn connect_new_remote_candidate_full<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored candidate: Nice.Candidate
-    //}
+    #[cfg(any(feature = "v0_1_8", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
+    pub fn connect_new_remote_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_remote_candidate_full_trampoline<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, candidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+            let f: &F = &*(f as *const F);
+            f(&from_glib_borrow(this), &from_glib_borrow(candidate))
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(self.as_ptr() as *mut _, b"new-remote-candidate-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(new_remote_candidate_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+        }
+    }
 
     #[cfg_attr(feature = "v0_1_8", deprecated)]
     pub fn connect_new_selected_pair<F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
@@ -843,12 +864,19 @@ impl Agent {
         }
     }
 
-    //#[cfg(any(feature = "v0_1_8", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
-    //pub fn connect_new_selected_pair_full<Unsupported or ignored types>(&self, f: F) -> SignalHandlerId {
-    //    Ignored lcandidate: Nice.Candidate
-    //    Ignored rcandidate: Nice.Candidate
-    //}
+    #[cfg(any(feature = "v0_1_8", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
+    pub fn connect_new_selected_pair_full<F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
+        unsafe extern "C" fn new_selected_pair_full_trampoline<F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, lcandidate: *mut ffi::NiceCandidate, rcandidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+            let f: &F = &*(f as *const F);
+            f(&from_glib_borrow(this), stream_id, component_id, &from_glib_borrow(lcandidate), &from_glib_borrow(rcandidate))
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(self.as_ptr() as *mut _, b"new-selected-pair-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(new_selected_pair_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+        }
+    }
 
     pub fn connect_reliable_transport_writable<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe extern "C" fn reliable_transport_writable_trampoline<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, f: glib::ffi::gpointer) {
