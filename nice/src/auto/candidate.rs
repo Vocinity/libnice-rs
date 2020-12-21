@@ -5,7 +5,7 @@
 use crate::CandidateType;
 use glib::translate::*;
 
-glib::glib_wrapper! {
+glib::wrapper! {
     #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Candidate(Boxed<ffi::NiceCandidate>);
 

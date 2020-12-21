@@ -27,6 +27,7 @@ generate = [
   "Nice.ProxyType",
   "Nice.Candidate",
   "Nice.Address",
+  "Nice.Address_s",
 ]
 
 manual = [

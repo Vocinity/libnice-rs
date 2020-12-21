@@ -12,10 +12,15 @@ use std::fmt;
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceCandidateTransport")]
 pub enum CandidateTransport {
+    #[doc(alias = "NICE_CANDIDATE_TRANSPORT_UDP")]
     Udp,
+    #[doc(alias = "NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE")]
     TcpActive,
+    #[doc(alias = "NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE")]
     TcpPassive,
+    #[doc(alias = "NICE_CANDIDATE_TRANSPORT_TCP_SO")]
     TcpSo,
     #[doc(hidden)]
     __Unknown(i32),
@@ -102,10 +107,15 @@ impl SetValue for CandidateTransport {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceCandidateType")]
 pub enum CandidateType {
+    #[doc(alias = "NICE_CANDIDATE_TYPE_HOST")]
     Host,
+    #[doc(alias = "NICE_CANDIDATE_TYPE_SERVER_REFLEXIVE")]
     ServerReflexive,
+    #[doc(alias = "NICE_CANDIDATE_TYPE_PEER_REFLEXIVE")]
     PeerReflexive,
+    #[doc(alias = "NICE_CANDIDATE_TYPE_RELAYED")]
     Relayed,
     #[doc(hidden)]
     __Unknown(i32),
@@ -192,12 +202,19 @@ impl SetValue for CandidateType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceCompatibility")]
 pub enum Compatibility {
+    #[doc(alias = "NICE_COMPATIBILITY_RFC5245")]
     Rfc5245,
+    #[doc(alias = "NICE_COMPATIBILITY_GOOGLE")]
     Google,
+    #[doc(alias = "NICE_COMPATIBILITY_MSN")]
     Msn,
+    #[doc(alias = "NICE_COMPATIBILITY_WLM2009")]
     Wlm2009,
+    #[doc(alias = "NICE_COMPATIBILITY_OC2007")]
     Oc2007,
+    #[doc(alias = "NICE_COMPATIBILITY_OC2007R2")]
     Oc2007r2,
     #[doc(hidden)]
     __Unknown(i32),
@@ -280,12 +297,19 @@ impl SetValue for Compatibility {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceComponentState")]
 pub enum ComponentState {
+    #[doc(alias = "NICE_COMPONENT_STATE_DISCONNECTED")]
     Disconnected,
+    #[doc(alias = "NICE_COMPONENT_STATE_GATHERING")]
     Gathering,
+    #[doc(alias = "NICE_COMPONENT_STATE_CONNECTING")]
     Connecting,
+    #[doc(alias = "NICE_COMPONENT_STATE_CONNECTED")]
     Connected,
+    #[doc(alias = "NICE_COMPONENT_STATE_READY")]
     Ready,
+    #[doc(alias = "NICE_COMPONENT_STATE_FAILED")]
     Failed,
     #[doc(hidden)]
     __Unknown(i32),
@@ -378,8 +402,11 @@ impl SetValue for ComponentState {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceComponentType")]
 pub enum ComponentType {
+    #[doc(alias = "NICE_COMPONENT_TYPE_RTP")]
     Rtp,
+    #[doc(alias = "NICE_COMPONENT_TYPE_RTCP")]
     Rtcp,
     #[doc(hidden)]
     __Unknown(i32),
@@ -452,8 +479,11 @@ impl SetValue for ComponentType {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceNominationMode")]
 pub enum NominationMode {
+    #[doc(alias = "NICE_NOMINATION_MODE_REGULAR")]
     Regular,
+    #[doc(alias = "NICE_NOMINATION_MODE_AGGRESSIVE")]
     Aggressive,
     #[doc(hidden)]
     __Unknown(i32),
@@ -538,9 +568,13 @@ impl SetValue for NominationMode {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceProxyType")]
 pub enum ProxyType {
+    #[doc(alias = "NICE_PROXY_TYPE_NONE")]
     None,
+    #[doc(alias = "NICE_PROXY_TYPE_SOCKS5")]
     Socks5,
+    #[doc(alias = "NICE_PROXY_TYPE_HTTP")]
     Http,
     #[doc(hidden)]
     __Unknown(i32),
@@ -614,9 +648,13 @@ impl SetValue for ProxyType {
 
 #[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
+#[doc(alias = "NiceRelayType")]
 pub enum RelayType {
+    #[doc(alias = "NICE_RELAY_TYPE_TURN_UDP")]
     Udp,
+    #[doc(alias = "NICE_RELAY_TYPE_TURN_TCP")]
     Tcp,
+    #[doc(alias = "NICE_RELAY_TYPE_TURN_TLS")]
     Tls,
     #[doc(hidden)]
     __Unknown(i32),
