@@ -59,9 +59,9 @@ impl IntoGlib for AgentOption {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 #[doc(hidden)]
 impl FromGlib<ffi::NiceAgentOption> for AgentOption {
-    unsafe fn from_glib(value: ffi::NiceAgentOption) -> AgentOption {
+    unsafe fn from_glib(value: ffi::NiceAgentOption) -> Self {
         skip_assert_initialized!();
-        AgentOption::from_bits_truncate(value)
+        Self::from_bits_truncate(value)
     }
 }
 
@@ -94,7 +94,7 @@ unsafe impl<'a> FromValue<'a> for AgentOption {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 impl ToValue for AgentOption {
     fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<AgentOption>();
+        let mut value = glib::Value::for_value_type::<Self>();
         unsafe {
             glib::gobject_ffi::g_value_set_flags(value.to_glib_none_mut().0, self.into_glib());
         }
