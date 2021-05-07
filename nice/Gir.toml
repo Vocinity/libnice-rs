@@ -1,5 +1,5 @@
 [options]
-girs_dir = "../gir-files"
+girs_directories = ["../gir-files"]
 library = "Nice"
 version = "0.1"
 target_path = "."
@@ -26,8 +26,6 @@ generate = [
   "Nice.NominationMode",
   "Nice.ProxyType",
   "Nice.Candidate",
-  "Nice.Address",
-  "Nice.Address_s",
 ]
 
 manual = [
