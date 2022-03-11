@@ -43,13 +43,13 @@ name = "nice_sys"
 libc = "0.2"
 
 [dependencies.glib-sys]
-git = "https://github.com/gtk-rs/gtk-rs"
+git = "https://github.com/gtk-rs/gtk-rs-core"
 
 [dependencies.gobject-sys]
-git = "https://github.com/gtk-rs/gtk-rs"
+git = "https://github.com/gtk-rs/gtk-rs-core"
 
 [dependencies.gio-sys]
-git = "https://github.com/gtk-rs/gtk-rs"
+git = "https://github.com/gtk-rs/gtk-rs-core"
 
 [build-dependencies]
 system-deps = "2.0"

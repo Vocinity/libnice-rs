@@ -9,7 +9,7 @@ license = "MIT"
 
 [dependencies]
 ffi = { package = "n-sys", path = "sys", version = "0.1.0", features = ["v0_1_4"]}
-glib = { git = "https://github.com/gtk-rs/gtk-rs" }
+glib = { git = "https://github.com/gtk-rs/gtk-rs-core.git", package = "glib" }
 libc = "0.2"
 bitflags = "1.2"
 
