@@ -2,7 +2,7 @@
 name = "n-sys"
 version = "0.1.0"
 links = "\"nice\""
-edition = "2018"
+edition = "2021"
 build = "build.rs"
 [package.metadata.system-deps.nice]
 version = "0.1"
@@ -43,13 +43,13 @@ name = "nice_sys"
 libc = "0.2"
 
 [dependencies.glib-sys]
-git = "https://github.com/gtk-rs/gtk-rs-core"
+version = "0.16"
 
 [dependencies.gobject-sys]
-git = "https://github.com/gtk-rs/gtk-rs-core"
+version = "0.16"
 
 [dependencies.gio-sys]
-git = "https://github.com/gtk-rs/gtk-rs-core"
+version = "0.16"
 
 [build-dependencies]
 system-deps = "2.0"

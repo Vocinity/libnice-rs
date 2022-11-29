@@ -10,29 +10,20 @@ use bitflags::bitflags;
 use glib::translate::*;
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-use glib::value::FromValue;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-use glib::value::ToValue;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-use glib::StaticType;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-use glib::Type;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 use std::fmt;
 
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 bitflags! {
     pub struct AgentOption: u32 {
+        const NONE = 0;
         const REGULAR_NOMINATION = 1;
         const RELIABLE = 2;
         const LITE_MODE = 4;
         const ICE_TRICKLE = 8;
         const SUPPORT_RENOMINATION = 16;
+        const CONSENT_FRESHNESS = 32;
+        const BYTESTREAM_TCP = 64;
     }
 }
 
@@ -64,45 +55,3 @@ impl FromGlib<ffi::NiceAgentOption> for AgentOption {
         Self::from_bits_truncate(value)
     }
 }
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl StaticType for AgentOption {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_agent_option_get_type()) }
-    }
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl glib::value::ValueType for AgentOption {
-    type Type = Self;
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-unsafe impl<'a> FromValue<'a> for AgentOption {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_flags(value.to_glib_none().0))
-    }
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl ToValue for AgentOption {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_flags(value.to_glib_none_mut().0, self.into_glib());
-        }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
-    }
-}
-

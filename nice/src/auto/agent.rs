@@ -2,7 +2,6 @@
 // from ../gir-files
 // DO NOT EDIT
 
-use crate::Address;
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 use crate::AgentOption;
@@ -11,9 +10,6 @@ use crate::Compatibility;
 #[cfg(any(feature = "v0_1_8", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
 use crate::ComponentState;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-use crate::NominationMode;
 use crate::RelayType;
 use glib::object::ObjectType as ObjectType_;
 use glib::signal::connect_raw;
@@ -39,7 +35,10 @@ impl Agent {
     pub fn new(ctx: &glib::MainContext, compat: Compatibility) -> Agent {
         assert_initialized_main_thread!();
         unsafe {
-            from_glib_full(ffi::nice_agent_new(ctx.to_glib_none().0, compat.into_glib()))
+            from_glib_full(ffi::nice_agent_new(
+                ctx.to_glib_none().0,
+                compat.into_glib(),
+            ))
         }
     }
 
@@ -49,7 +48,11 @@ impl Agent {
     pub fn new_full(ctx: &glib::MainContext, compat: Compatibility, flags: AgentOption) -> Agent {
         assert_initialized_main_thread!();
         unsafe {
-            from_glib_full(ffi::nice_agent_new_full(ctx.to_glib_none().0, compat.into_glib(), flags.into_glib()))
+            from_glib_full(ffi::nice_agent_new_full(
+                ctx.to_glib_none().0,
+                compat.into_glib(),
+                flags.into_glib(),
+            ))
         }
     }
 
@@ -57,28 +60,42 @@ impl Agent {
     pub fn new_reliable(ctx: &glib::MainContext, compat: Compatibility) -> Agent {
         assert_initialized_main_thread!();
         unsafe {
-            from_glib_full(ffi::nice_agent_new_reliable(ctx.to_glib_none().0, compat.into_glib()))
+            from_glib_full(ffi::nice_agent_new_reliable(
+                ctx.to_glib_none().0,
+                compat.into_glib(),
+            ))
         }
     }
 
-    #[doc(alias = "nice_agent_add_local_address")]
-    pub fn add_local_address(&self, addr: &mut Address) -> bool {
-        unsafe {
-            from_glib(ffi::nice_agent_add_local_address(self.to_glib_none().0, addr.to_glib_none_mut().0))
-        }
-    }
+    //#[doc(alias = "nice_agent_add_local_address")]
+    //pub fn add_local_address(&self, addr: /*Ignored*/&mut Address) -> bool {
+    //    unsafe { TODO: call ffi:nice_agent_add_local_address() }
+    //}
 
     #[doc(alias = "nice_agent_add_stream")]
     pub fn add_stream(&self, n_components: u32) -> u32 {
-        unsafe {
-            ffi::nice_agent_add_stream(self.to_glib_none().0, n_components)
-        }
+        unsafe { ffi::nice_agent_add_stream(self.to_glib_none().0, n_components) }
     }
 
     #[doc(alias = "nice_agent_attach_recv")]
-    pub fn attach_recv<P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static>(&self, stream_id: u32, component_id: u32, ctx: &glib::MainContext, func: P) -> bool {
+    pub fn attach_recv<P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static>(
+        &self,
+        stream_id: u32,
+        component_id: u32,
+        ctx: &glib::MainContext,
+        func: P,
+    ) -> bool {
         let func_data: Box_<P> = Box_::new(func);
-        unsafe extern "C" fn func_func<P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static>(agent: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, len: libc::c_uint, buf: *mut libc::c_char, user_data: glib::ffi::gpointer) {
+        unsafe extern "C" fn func_func<
+            P: Fn(&Agent, u32, u32, u32, &str) + Send + Sync + 'static,
+        >(
+            agent: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            len: libc::c_uint,
+            buf: *mut libc::c_char,
+            user_data: glib::ffi::gpointer,
+        ) {
             let agent = from_glib_borrow(agent);
             let buf: Borrowed<glib::GString> = from_glib_borrow(buf);
             let callback: &P = &*(user_data as *mut _);
@@ -87,7 +104,14 @@ impl Agent {
         let func = Some(func_func::<P> as _);
         let super_callback0: Box_<P> = func_data;
         unsafe {
-            from_glib(ffi::nice_agent_attach_recv(self.to_glib_none().0, stream_id, component_id, ctx.to_glib_none().0, func, Box_::into_raw(super_callback0) as *mut _))
+            from_glib(ffi::nice_agent_attach_recv(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                ctx.to_glib_none().0,
+                func,
+                Box_::into_raw(super_callback0) as *mut _,
+            ))
         }
     }
 
@@ -98,19 +122,39 @@ impl Agent {
     //    unsafe { TODO: call ffi:nice_agent_close_async() }
     //}
 
+    #[cfg(any(feature = "v0_1_19", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
+    #[doc(alias = "nice_agent_consent_lost")]
+    pub fn consent_lost(&self, stream_id: u32, component_id: u32) -> bool {
+        unsafe {
+            from_glib(ffi::nice_agent_consent_lost(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
+        }
+    }
+
     #[cfg(any(feature = "v0_1_6", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_6")))]
     #[doc(alias = "nice_agent_forget_relays")]
     pub fn forget_relays(&self, stream_id: u32, component_id: u32) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_forget_relays(self.to_glib_none().0, stream_id, component_id))
+            from_glib(ffi::nice_agent_forget_relays(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_gather_candidates")]
     pub fn gather_candidates(&self, stream_id: u32) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_gather_candidates(self.to_glib_none().0, stream_id))
+            from_glib(ffi::nice_agent_gather_candidates(
+                self.to_glib_none().0,
+                stream_id,
+            ))
         }
     }
 
@@ -119,7 +163,10 @@ impl Agent {
     #[doc(alias = "nice_agent_generate_local_candidate_sdp")]
     pub fn generate_local_candidate_sdp(&self, candidate: &mut Candidate) -> Option<glib::GString> {
         unsafe {
-            from_glib_full(ffi::nice_agent_generate_local_candidate_sdp(self.to_glib_none().0, candidate.to_glib_none_mut().0))
+            from_glib_full(ffi::nice_agent_generate_local_candidate_sdp(
+                self.to_glib_none().0,
+                candidate.to_glib_none_mut().0,
+            ))
         }
     }
 
@@ -127,17 +174,23 @@ impl Agent {
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     #[doc(alias = "nice_agent_generate_local_sdp")]
     pub fn generate_local_sdp(&self) -> Option<glib::GString> {
-        unsafe {
-            from_glib_full(ffi::nice_agent_generate_local_sdp(self.to_glib_none().0))
-        }
+        unsafe { from_glib_full(ffi::nice_agent_generate_local_sdp(self.to_glib_none().0)) }
     }
 
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     #[doc(alias = "nice_agent_generate_local_stream_sdp")]
-    pub fn generate_local_stream_sdp(&self, stream_id: u32, include_non_ice: bool) -> Option<glib::GString> {
+    pub fn generate_local_stream_sdp(
+        &self,
+        stream_id: u32,
+        include_non_ice: bool,
+    ) -> Option<glib::GString> {
         unsafe {
-            from_glib_full(ffi::nice_agent_generate_local_stream_sdp(self.to_glib_none().0, stream_id, include_non_ice.into_glib()))
+            from_glib_full(ffi::nice_agent_generate_local_stream_sdp(
+                self.to_glib_none().0,
+                stream_id,
+                include_non_ice.into_glib(),
+            ))
         }
     }
 
@@ -147,7 +200,11 @@ impl Agent {
     #[doc(alias = "get_component_state")]
     pub fn component_state(&self, stream_id: u32, component_id: u32) -> ComponentState {
         unsafe {
-            from_glib(ffi::nice_agent_get_component_state(self.to_glib_none().0, stream_id, component_id))
+            from_glib(ffi::nice_agent_get_component_state(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -155,7 +212,11 @@ impl Agent {
     #[doc(alias = "get_default_local_candidate")]
     pub fn default_local_candidate(&self, stream_id: u32, component_id: u32) -> Option<Candidate> {
         unsafe {
-            from_glib_full(ffi::nice_agent_get_default_local_candidate(self.to_glib_none().0, stream_id, component_id))
+            from_glib_full(ffi::nice_agent_get_default_local_candidate(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -165,7 +226,11 @@ impl Agent {
     #[doc(alias = "get_io_stream")]
     pub fn io_stream(&self, stream_id: u32, component_id: u32) -> Option<gio::IOStream> {
         unsafe {
-            from_glib_full(ffi::nice_agent_get_io_stream(self.to_glib_none().0, stream_id, component_id))
+            from_glib_full(ffi::nice_agent_get_io_stream(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -173,7 +238,11 @@ impl Agent {
     #[doc(alias = "get_local_candidates")]
     pub fn local_candidates(&self, stream_id: u32, component_id: u32) -> Vec<Candidate> {
         unsafe {
-            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_local_candidates(self.to_glib_none().0, stream_id, component_id))
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_local_candidates(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -183,8 +252,17 @@ impl Agent {
         unsafe {
             let mut ufrag = ptr::null_mut();
             let mut pwd = ptr::null_mut();
-            let ret = from_glib(ffi::nice_agent_get_local_credentials(self.to_glib_none().0, stream_id, &mut ufrag, &mut pwd));
-            if ret { Some((from_glib_full(ufrag), from_glib_full(pwd))) } else { None }
+            let ret = from_glib(ffi::nice_agent_get_local_credentials(
+                self.to_glib_none().0,
+                stream_id,
+                &mut ufrag,
+                &mut pwd,
+            ));
+            if ret {
+                Some((from_glib_full(ufrag), from_glib_full(pwd)))
+            } else {
+                None
+            }
         }
     }
 
@@ -192,7 +270,11 @@ impl Agent {
     #[doc(alias = "get_remote_candidates")]
     pub fn remote_candidates(&self, stream_id: u32, component_id: u32) -> Vec<Candidate> {
         unsafe {
-            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_remote_candidates(self.to_glib_none().0, stream_id, component_id))
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_remote_candidates(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -202,7 +284,11 @@ impl Agent {
     #[doc(alias = "get_selected_socket")]
     pub fn selected_socket(&self, stream_id: u32, component_id: u32) -> Option<gio::Socket> {
         unsafe {
-            from_glib_full(ffi::nice_agent_get_selected_socket(self.to_glib_none().0, stream_id, component_id))
+            from_glib_full(ffi::nice_agent_get_selected_socket(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -212,7 +298,11 @@ impl Agent {
     #[doc(alias = "get_sockets")]
     pub fn sockets(&self, stream_id: u32, component_id: u32) -> Vec<gio::Socket> {
         unsafe {
-            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_sockets(self.to_glib_none().0, stream_id, component_id))
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_get_sockets(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+            ))
         }
     }
 
@@ -222,7 +312,10 @@ impl Agent {
     #[doc(alias = "get_stream_name")]
     pub fn stream_name(&self, stream_id: u32) -> Option<glib::GString> {
         unsafe {
-            from_glib_none(ffi::nice_agent_get_stream_name(self.to_glib_none().0, stream_id))
+            from_glib_none(ffi::nice_agent_get_stream_name(
+                self.to_glib_none().0,
+                stream_id,
+            ))
         }
     }
 
@@ -231,7 +324,11 @@ impl Agent {
     #[doc(alias = "nice_agent_parse_remote_candidate_sdp")]
     pub fn parse_remote_candidate_sdp(&self, stream_id: u32, sdp: &str) -> Option<Candidate> {
         unsafe {
-            from_glib_full(ffi::nice_agent_parse_remote_candidate_sdp(self.to_glib_none().0, stream_id, sdp.to_glib_none().0))
+            from_glib_full(ffi::nice_agent_parse_remote_candidate_sdp(
+                self.to_glib_none().0,
+                stream_id,
+                sdp.to_glib_none().0,
+            ))
         }
     }
 
@@ -239,17 +336,27 @@ impl Agent {
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     #[doc(alias = "nice_agent_parse_remote_sdp")]
     pub fn parse_remote_sdp(&self, sdp: &str) -> i32 {
-        unsafe {
-            ffi::nice_agent_parse_remote_sdp(self.to_glib_none().0, sdp.to_glib_none().0)
-        }
+        unsafe { ffi::nice_agent_parse_remote_sdp(self.to_glib_none().0, sdp.to_glib_none().0) }
     }
 
     #[cfg(any(feature = "v0_1_4", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_4")))]
     #[doc(alias = "nice_agent_parse_remote_stream_sdp")]
-    pub fn parse_remote_stream_sdp(&self, stream_id: u32, sdp: &str, ufrag: &str, pwd: &str) -> Vec<Candidate> {
+    pub fn parse_remote_stream_sdp(
+        &self,
+        stream_id: u32,
+        sdp: &str,
+        ufrag: &str,
+        pwd: &str,
+    ) -> Vec<Candidate> {
         unsafe {
-            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_parse_remote_stream_sdp(self.to_glib_none().0, stream_id, sdp.to_glib_none().0, ufrag.to_glib_none().0, pwd.to_glib_none().0))
+            FromGlibPtrContainer::from_glib_full(ffi::nice_agent_parse_remote_stream_sdp(
+                self.to_glib_none().0,
+                stream_id,
+                sdp.to_glib_none().0,
+                ufrag.to_glib_none().0,
+                pwd.to_glib_none().0,
+            ))
         }
     }
 
@@ -258,7 +365,10 @@ impl Agent {
     #[doc(alias = "nice_agent_peer_candidate_gathering_done")]
     pub fn peer_candidate_gathering_done(&self, stream_id: u32) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_peer_candidate_gathering_done(self.to_glib_none().0, stream_id))
+            from_glib(ffi::nice_agent_peer_candidate_gathering_done(
+                self.to_glib_none().0,
+                stream_id,
+            ))
         }
     }
 
@@ -285,9 +395,7 @@ impl Agent {
 
     #[doc(alias = "nice_agent_restart")]
     pub fn restart(&self) -> bool {
-        unsafe {
-            from_glib(ffi::nice_agent_restart(self.to_glib_none().0))
-        }
+        unsafe { from_glib(ffi::nice_agent_restart(self.to_glib_none().0)) }
     }
 
     #[cfg(any(feature = "v0_1_6", feature = "dox"))]
@@ -295,14 +403,23 @@ impl Agent {
     #[doc(alias = "nice_agent_restart_stream")]
     pub fn restart_stream(&self, stream_id: u32) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_restart_stream(self.to_glib_none().0, stream_id))
+            from_glib(ffi::nice_agent_restart_stream(
+                self.to_glib_none().0,
+                stream_id,
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_send")]
     pub fn send(&self, stream_id: u32, component_id: u32, len: u32, buf: &str) -> i32 {
         unsafe {
-            ffi::nice_agent_send(self.to_glib_none().0, stream_id, component_id, len, buf.to_glib_none().0)
+            ffi::nice_agent_send(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                len,
+                buf.to_glib_none().0,
+            )
         }
     }
 
@@ -316,42 +433,98 @@ impl Agent {
     #[doc(alias = "nice_agent_set_local_credentials")]
     pub fn set_local_credentials(&self, stream_id: u32, ufrag: &str, pwd: &str) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_local_credentials(self.to_glib_none().0, stream_id, ufrag.to_glib_none().0, pwd.to_glib_none().0))
+            from_glib(ffi::nice_agent_set_local_credentials(
+                self.to_glib_none().0,
+                stream_id,
+                ufrag.to_glib_none().0,
+                pwd.to_glib_none().0,
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_set_port_range")]
     pub fn set_port_range(&self, stream_id: u32, component_id: u32, min_port: u32, max_port: u32) {
         unsafe {
-            ffi::nice_agent_set_port_range(self.to_glib_none().0, stream_id, component_id, min_port, max_port);
+            ffi::nice_agent_set_port_range(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                min_port,
+                max_port,
+            );
         }
     }
 
     #[doc(alias = "nice_agent_set_relay_info")]
-    pub fn set_relay_info(&self, stream_id: u32, component_id: u32, server_ip: &str, server_port: u32, username: &str, password: &str, type_: RelayType) -> bool {
+    pub fn set_relay_info(
+        &self,
+        stream_id: u32,
+        component_id: u32,
+        server_ip: &str,
+        server_port: u32,
+        username: &str,
+        password: &str,
+        type_: RelayType,
+    ) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_relay_info(self.to_glib_none().0, stream_id, component_id, server_ip.to_glib_none().0, server_port, username.to_glib_none().0, password.to_glib_none().0, type_.into_glib()))
+            from_glib(ffi::nice_agent_set_relay_info(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                server_ip.to_glib_none().0,
+                server_port,
+                username.to_glib_none().0,
+                password.to_glib_none().0,
+                type_.into_glib(),
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_set_remote_credentials")]
     pub fn set_remote_credentials(&self, stream_id: u32, ufrag: &str, pwd: &str) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_remote_credentials(self.to_glib_none().0, stream_id, ufrag.to_glib_none().0, pwd.to_glib_none().0))
+            from_glib(ffi::nice_agent_set_remote_credentials(
+                self.to_glib_none().0,
+                stream_id,
+                ufrag.to_glib_none().0,
+                pwd.to_glib_none().0,
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_set_selected_pair")]
-    pub fn set_selected_pair(&self, stream_id: u32, component_id: u32, lfoundation: &str, rfoundation: &str) -> bool {
+    pub fn set_selected_pair(
+        &self,
+        stream_id: u32,
+        component_id: u32,
+        lfoundation: &str,
+        rfoundation: &str,
+    ) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_selected_pair(self.to_glib_none().0, stream_id, component_id, lfoundation.to_glib_none().0, rfoundation.to_glib_none().0))
+            from_glib(ffi::nice_agent_set_selected_pair(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                lfoundation.to_glib_none().0,
+                rfoundation.to_glib_none().0,
+            ))
         }
     }
 
     #[doc(alias = "nice_agent_set_selected_remote_candidate")]
-    pub fn set_selected_remote_candidate(&self, stream_id: u32, component_id: u32, candidate: &mut Candidate) -> bool {
+    pub fn set_selected_remote_candidate(
+        &self,
+        stream_id: u32,
+        component_id: u32,
+        candidate: &mut Candidate,
+    ) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_selected_remote_candidate(self.to_glib_none().0, stream_id, component_id, candidate.to_glib_none_mut().0))
+            from_glib(ffi::nice_agent_set_selected_remote_candidate(
+                self.to_glib_none().0,
+                stream_id,
+                component_id,
+                candidate.to_glib_none_mut().0,
+            ))
         }
     }
 
@@ -367,7 +540,11 @@ impl Agent {
     #[doc(alias = "nice_agent_set_stream_name")]
     pub fn set_stream_name(&self, stream_id: u32, name: &str) -> bool {
         unsafe {
-            from_glib(ffi::nice_agent_set_stream_name(self.to_glib_none().0, stream_id, name.to_glib_none().0))
+            from_glib(ffi::nice_agent_set_stream_name(
+                self.to_glib_none().0,
+                stream_id,
+                name.to_glib_none().0,
+            ))
         }
     }
 
@@ -384,16 +561,58 @@ impl Agent {
     pub fn is_bytestream_tcp(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"bytestream-tcp\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `bytestream-tcp` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"bytestream-tcp\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `bytestream-tcp` getter")
+        }
+    }
+
+    #[cfg(any(feature = "v0_1_8", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
+    #[doc(alias = "bytestream-tcp")]
+    pub fn set_bytestream_tcp(&self, bytestream_tcp: bool) {
+        unsafe {
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"bytestream-tcp\0".as_ptr() as *const _,
+                bytestream_tcp.to_value().to_glib_none().0,
+            );
         }
     }
 
     pub fn compatibility(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"compatibility\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `compatibility` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"compatibility\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `compatibility` getter")
+        }
+    }
+
+    #[cfg(any(feature = "v0_1_19", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
+    #[doc(alias = "consent-freshness")]
+    pub fn is_consent_freshness(&self) -> bool {
+        unsafe {
+            let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"consent-freshness\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `consent-freshness` getter")
         }
     }
 
@@ -401,15 +620,25 @@ impl Agent {
     pub fn is_controlling_mode(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"controlling-mode\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `controlling-mode` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"controlling-mode\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `controlling-mode` getter")
         }
     }
 
     #[doc(alias = "controlling-mode")]
     pub fn set_controlling_mode(&self, controlling_mode: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"controlling-mode\0".as_ptr() as *const _, controlling_mode.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"controlling-mode\0".as_ptr() as *const _,
+                controlling_mode.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -419,8 +648,14 @@ impl Agent {
     pub fn is_force_relay(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"force-relay\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `force-relay` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"force-relay\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `force-relay` getter")
         }
     }
 
@@ -429,7 +664,11 @@ impl Agent {
     #[doc(alias = "force-relay")]
     pub fn set_force_relay(&self, force_relay: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"force-relay\0".as_ptr() as *const _, force_relay.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"force-relay\0".as_ptr() as *const _,
+                force_relay.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -437,8 +676,14 @@ impl Agent {
     pub fn is_full_mode(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"full-mode\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `full-mode` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"full-mode\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `full-mode` getter")
         }
     }
 
@@ -448,8 +693,14 @@ impl Agent {
     pub fn is_ice_tcp(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-tcp\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `ice-tcp` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-tcp\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `ice-tcp` getter")
         }
     }
 
@@ -458,7 +709,11 @@ impl Agent {
     #[doc(alias = "ice-tcp")]
     pub fn set_ice_tcp(&self, ice_tcp: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-tcp\0".as_ptr() as *const _, ice_tcp.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-tcp\0".as_ptr() as *const _,
+                ice_tcp.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -468,8 +723,14 @@ impl Agent {
     pub fn is_ice_trickle(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-trickle\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `ice-trickle` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-trickle\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `ice-trickle` getter")
         }
     }
 
@@ -478,7 +739,11 @@ impl Agent {
     #[doc(alias = "ice-trickle")]
     pub fn set_ice_trickle(&self, ice_trickle: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-trickle\0".as_ptr() as *const _, ice_trickle.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-trickle\0".as_ptr() as *const _,
+                ice_trickle.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -488,8 +753,14 @@ impl Agent {
     pub fn is_ice_udp(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-udp\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `ice-udp` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-udp\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `ice-udp` getter")
         }
     }
 
@@ -498,7 +769,11 @@ impl Agent {
     #[doc(alias = "ice-udp")]
     pub fn set_ice_udp(&self, ice_udp: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"ice-udp\0".as_ptr() as *const _, ice_udp.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"ice-udp\0".as_ptr() as *const _,
+                ice_udp.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -508,8 +783,14 @@ impl Agent {
     pub fn idle_timeout(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"idle-timeout\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `idle-timeout` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"idle-timeout\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `idle-timeout` getter")
         }
     }
 
@@ -518,7 +799,11 @@ impl Agent {
     #[doc(alias = "idle-timeout")]
     pub fn set_idle_timeout(&self, idle_timeout: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"idle-timeout\0".as_ptr() as *const _, idle_timeout.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"idle-timeout\0".as_ptr() as *const _,
+                idle_timeout.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -528,8 +813,14 @@ impl Agent {
     pub fn is_keepalive_conncheck(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"keepalive-conncheck\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `keepalive-conncheck` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"keepalive-conncheck\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `keepalive-conncheck` getter")
         }
     }
 
@@ -538,7 +829,11 @@ impl Agent {
     #[doc(alias = "keepalive-conncheck")]
     pub fn set_keepalive_conncheck(&self, keepalive_conncheck: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"keepalive-conncheck\0".as_ptr() as *const _, keepalive_conncheck.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"keepalive-conncheck\0".as_ptr() as *const _,
+                keepalive_conncheck.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -555,42 +850,71 @@ impl Agent {
     pub fn max_connectivity_checks(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"max-connectivity-checks\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `max-connectivity-checks` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"max-connectivity-checks\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `max-connectivity-checks` getter")
         }
     }
 
     #[doc(alias = "max-connectivity-checks")]
     pub fn set_max_connectivity_checks(&self, max_connectivity_checks: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"max-connectivity-checks\0".as_ptr() as *const _, max_connectivity_checks.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"max-connectivity-checks\0".as_ptr() as *const _,
+                max_connectivity_checks.to_value().to_glib_none().0,
+            );
         }
     }
 
-    #[cfg(any(feature = "v0_1_15", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    #[doc(alias = "nomination-mode")]
-    pub fn nomination_mode(&self) -> NominationMode {
-        unsafe {
-            let mut value = glib::Value::from_type(<NominationMode as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"nomination-mode\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `nomination-mode` getter")
-        }
-    }
+    //#[cfg(any(feature = "v0_1_20", feature = "dox"))]
+    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_20")))]
+    //#[doc(alias = "proxy-extra-headers")]
+    //pub fn proxy_extra_headers(&self) -> /*Unimplemented*/HashTable TypeId { ns_id: 0, id: 28 }/TypeId { ns_id: 0, id: 28 } {
+    //    unsafe {
+    //        let mut value = glib::Value::from_type(</*Unknown type*/ as StaticType>::static_type());
+    //        glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-extra-headers\0".as_ptr() as *const _, value.to_glib_none_mut().0);
+    //        value.get().expect("Return Value for property `proxy-extra-headers` getter")
+    //    }
+    //}
+
+    //#[cfg(any(feature = "v0_1_20", feature = "dox"))]
+    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_20")))]
+    //#[doc(alias = "proxy-extra-headers")]
+    //pub fn set_proxy_extra_headers(&self, proxy_extra_headers: /*Unimplemented*/HashTable TypeId { ns_id: 0, id: 28 }/TypeId { ns_id: 0, id: 28 }) {
+    //    unsafe {
+    //        glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-extra-headers\0".as_ptr() as *const _, proxy_extra_headers.to_value().to_glib_none().0);
+    //    }
+    //}
 
     #[doc(alias = "proxy-ip")]
     pub fn proxy_ip(&self) -> Option<glib::GString> {
         unsafe {
             let mut value = glib::Value::from_type(<glib::GString as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-ip\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `proxy-ip` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-ip\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `proxy-ip` getter")
         }
     }
 
     #[doc(alias = "proxy-ip")]
     pub fn set_proxy_ip(&self, proxy_ip: Option<&str>) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-ip\0".as_ptr() as *const _, proxy_ip.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-ip\0".as_ptr() as *const _,
+                proxy_ip.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -598,15 +922,25 @@ impl Agent {
     pub fn proxy_password(&self) -> Option<glib::GString> {
         unsafe {
             let mut value = glib::Value::from_type(<glib::GString as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-password\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `proxy-password` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-password\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `proxy-password` getter")
         }
     }
 
     #[doc(alias = "proxy-password")]
     pub fn set_proxy_password(&self, proxy_password: Option<&str>) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-password\0".as_ptr() as *const _, proxy_password.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-password\0".as_ptr() as *const _,
+                proxy_password.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -614,15 +948,25 @@ impl Agent {
     pub fn proxy_port(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-port\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `proxy-port` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-port\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `proxy-port` getter")
         }
     }
 
     #[doc(alias = "proxy-port")]
     pub fn set_proxy_port(&self, proxy_port: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-port\0".as_ptr() as *const _, proxy_port.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-port\0".as_ptr() as *const _,
+                proxy_port.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -630,15 +974,25 @@ impl Agent {
     pub fn proxy_type(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-type\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `proxy-type` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-type\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `proxy-type` getter")
         }
     }
 
     #[doc(alias = "proxy-type")]
     pub fn set_proxy_type(&self, proxy_type: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-type\0".as_ptr() as *const _, proxy_type.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-type\0".as_ptr() as *const _,
+                proxy_type.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -646,23 +1000,39 @@ impl Agent {
     pub fn proxy_username(&self) -> Option<glib::GString> {
         unsafe {
             let mut value = glib::Value::from_type(<glib::GString as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-username\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `proxy-username` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-username\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `proxy-username` getter")
         }
     }
 
     #[doc(alias = "proxy-username")]
     pub fn set_proxy_username(&self, proxy_username: Option<&str>) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"proxy-username\0".as_ptr() as *const _, proxy_username.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"proxy-username\0".as_ptr() as *const _,
+                proxy_username.to_value().to_glib_none().0,
+            );
         }
     }
 
     pub fn is_reliable(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"reliable\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `reliable` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"reliable\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `reliable` getter")
         }
     }
 
@@ -672,8 +1042,14 @@ impl Agent {
     pub fn stun_initial_timeout(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-initial-timeout\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-initial-timeout` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-initial-timeout\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-initial-timeout` getter")
         }
     }
 
@@ -682,7 +1058,11 @@ impl Agent {
     #[doc(alias = "stun-initial-timeout")]
     pub fn set_stun_initial_timeout(&self, stun_initial_timeout: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-initial-timeout\0".as_ptr() as *const _, stun_initial_timeout.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-initial-timeout\0".as_ptr() as *const _,
+                stun_initial_timeout.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -692,8 +1072,14 @@ impl Agent {
     pub fn stun_max_retransmissions(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-max-retransmissions\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-max-retransmissions` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-max-retransmissions\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-max-retransmissions` getter")
         }
     }
 
@@ -702,7 +1088,11 @@ impl Agent {
     #[doc(alias = "stun-max-retransmissions")]
     pub fn set_stun_max_retransmissions(&self, stun_max_retransmissions: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-max-retransmissions\0".as_ptr() as *const _, stun_max_retransmissions.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-max-retransmissions\0".as_ptr() as *const _,
+                stun_max_retransmissions.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -710,15 +1100,25 @@ impl Agent {
     pub fn stun_pacing_timer(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-pacing-timer\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-pacing-timer` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-pacing-timer\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-pacing-timer` getter")
         }
     }
 
     #[doc(alias = "stun-pacing-timer")]
     pub fn set_stun_pacing_timer(&self, stun_pacing_timer: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-pacing-timer\0".as_ptr() as *const _, stun_pacing_timer.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-pacing-timer\0".as_ptr() as *const _,
+                stun_pacing_timer.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -728,8 +1128,14 @@ impl Agent {
     pub fn stun_reliable_timeout(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-reliable-timeout\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-reliable-timeout` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-reliable-timeout\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-reliable-timeout` getter")
         }
     }
 
@@ -738,7 +1144,11 @@ impl Agent {
     #[doc(alias = "stun-reliable-timeout")]
     pub fn set_stun_reliable_timeout(&self, stun_reliable_timeout: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-reliable-timeout\0".as_ptr() as *const _, stun_reliable_timeout.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-reliable-timeout\0".as_ptr() as *const _,
+                stun_reliable_timeout.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -746,15 +1156,25 @@ impl Agent {
     pub fn stun_server(&self) -> Option<glib::GString> {
         unsafe {
             let mut value = glib::Value::from_type(<glib::GString as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-server\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-server` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-server\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-server` getter")
         }
     }
 
     #[doc(alias = "stun-server")]
     pub fn set_stun_server(&self, stun_server: Option<&str>) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-server\0".as_ptr() as *const _, stun_server.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-server\0".as_ptr() as *const _,
+                stun_server.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -762,15 +1182,25 @@ impl Agent {
     pub fn stun_server_port(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-server-port\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `stun-server-port` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-server-port\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `stun-server-port` getter")
         }
     }
 
     #[doc(alias = "stun-server-port")]
     pub fn set_stun_server_port(&self, stun_server_port: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"stun-server-port\0".as_ptr() as *const _, stun_server_port.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"stun-server-port\0".as_ptr() as *const _,
+                stun_server_port.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -778,29 +1208,49 @@ impl Agent {
     pub fn supports_renomination(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"support-renomination\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `support-renomination` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"support-renomination\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `support-renomination` getter")
         }
     }
 
     #[doc(alias = "support-renomination")]
     pub fn set_support_renomination(&self, support_renomination: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"support-renomination\0".as_ptr() as *const _, support_renomination.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"support-renomination\0".as_ptr() as *const _,
+                support_renomination.to_value().to_glib_none().0,
+            );
         }
     }
 
     pub fn is_upnp(&self) -> bool {
         unsafe {
             let mut value = glib::Value::from_type(<bool as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"upnp\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `upnp` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"upnp\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `upnp` getter")
         }
     }
 
     pub fn set_upnp(&self, upnp: bool) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"upnp\0".as_ptr() as *const _, upnp.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"upnp\0".as_ptr() as *const _,
+                upnp.to_value().to_glib_none().0,
+            );
         }
     }
 
@@ -808,154 +1258,353 @@ impl Agent {
     pub fn upnp_timeout(&self) -> u32 {
         unsafe {
             let mut value = glib::Value::from_type(<u32 as StaticType>::static_type());
-            glib::gobject_ffi::g_object_get_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"upnp-timeout\0".as_ptr() as *const _, value.to_glib_none_mut().0);
-            value.get().expect("Return Value for property `upnp-timeout` getter")
+            glib::gobject_ffi::g_object_get_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"upnp-timeout\0".as_ptr() as *const _,
+                value.to_glib_none_mut().0,
+            );
+            value
+                .get()
+                .expect("Return Value for property `upnp-timeout` getter")
         }
     }
 
     #[doc(alias = "upnp-timeout")]
     pub fn set_upnp_timeout(&self, upnp_timeout: u32) {
         unsafe {
-            glib::gobject_ffi::g_object_set_property(self.as_ptr() as *mut glib::gobject_ffi::GObject, b"upnp-timeout\0".as_ptr() as *const _, upnp_timeout.to_value().to_glib_none().0);
+            glib::gobject_ffi::g_object_set_property(
+                self.as_ptr() as *mut glib::gobject_ffi::GObject,
+                b"upnp-timeout\0".as_ptr() as *const _,
+                upnp_timeout.to_value().to_glib_none().0,
+            );
         }
     }
 
     #[doc(alias = "candidate-gathering-done")]
-    pub fn connect_candidate_gathering_done<F: Fn(&Agent, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn candidate_gathering_done_trampoline<F: Fn(&Agent, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_candidate_gathering_done<F: Fn(&Agent, u32) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn candidate_gathering_done_trampoline<
+            F: Fn(&Agent, u32) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"candidate-gathering-done\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(candidate_gathering_done_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"candidate-gathering-done\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    candidate_gathering_done_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "component-state-changed")]
-    pub fn connect_component_state_changed<F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn component_state_changed_trampoline<F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, state: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_component_state_changed<F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn component_state_changed_trampoline<
+            F: Fn(&Agent, u32, u32, u32) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            state: libc::c_uint,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id, state)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"component-state-changed\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(component_state_changed_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"component-state-changed\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    component_state_changed_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "initial-binding-request-received")]
-    pub fn connect_initial_binding_request_received<F: Fn(&Agent, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn initial_binding_request_received_trampoline<F: Fn(&Agent, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_initial_binding_request_received<F: Fn(&Agent, u32) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn initial_binding_request_received_trampoline<
+            F: Fn(&Agent, u32) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"initial-binding-request-received\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(initial_binding_request_received_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"initial-binding-request-received\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    initial_binding_request_received_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg_attr(feature = "v0_1_8", deprecated = "Since 0.1.8")]
     #[doc(alias = "new-candidate")]
-    pub fn connect_new_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_candidate_trampoline<
+            F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            foundation: *mut libc::c_char,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
-            f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(foundation))
+            f(
+                &from_glib_borrow(this),
+                stream_id,
+                component_id,
+                &glib::GString::from_glib_borrow(foundation),
+            )
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-candidate\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_candidate_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-candidate\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_candidate_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "new-candidate-full")]
-    pub fn connect_new_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_candidate_full_trampoline<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, candidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+    pub fn connect_new_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_candidate_full_trampoline<
+            F: Fn(&Agent, &Candidate) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            candidate: *mut ffi::NiceCandidate,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), &from_glib_borrow(candidate))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-candidate-full\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_candidate_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-candidate-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_candidate_full_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg_attr(feature = "v0_1_8", deprecated = "Since 0.1.8")]
     #[doc(alias = "new-remote-candidate")]
-    pub fn connect_new_remote_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_remote_candidate_trampoline<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, foundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_remote_candidate<F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_remote_candidate_trampoline<
+            F: Fn(&Agent, u32, u32, &str) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            foundation: *mut libc::c_char,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
-            f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(foundation))
+            f(
+                &from_glib_borrow(this),
+                stream_id,
+                component_id,
+                &glib::GString::from_glib_borrow(foundation),
+            )
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-remote-candidate\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_remote_candidate_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-remote-candidate\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_remote_candidate_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "new-remote-candidate-full")]
-    pub fn connect_new_remote_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_remote_candidate_full_trampoline<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, candidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+    pub fn connect_new_remote_candidate_full<F: Fn(&Agent, &Candidate) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_remote_candidate_full_trampoline<
+            F: Fn(&Agent, &Candidate) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            candidate: *mut ffi::NiceCandidate,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), &from_glib_borrow(candidate))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-remote-candidate-full\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_remote_candidate_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-remote-candidate-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_remote_candidate_full_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg_attr(feature = "v0_1_8", deprecated = "Since 0.1.8")]
     #[doc(alias = "new-selected-pair")]
-    pub fn connect_new_selected_pair<F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_selected_pair_trampoline<F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, lfoundation: *mut libc::c_char, rfoundation: *mut libc::c_char, f: glib::ffi::gpointer) {
+    pub fn connect_new_selected_pair<
+        F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static,
+    >(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_selected_pair_trampoline<
+            F: Fn(&Agent, u32, u32, &str, &str) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            lfoundation: *mut libc::c_char,
+            rfoundation: *mut libc::c_char,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
-            f(&from_glib_borrow(this), stream_id, component_id, &glib::GString::from_glib_borrow(lfoundation), &glib::GString::from_glib_borrow(rfoundation))
+            f(
+                &from_glib_borrow(this),
+                stream_id,
+                component_id,
+                &glib::GString::from_glib_borrow(lfoundation),
+                &glib::GString::from_glib_borrow(rfoundation),
+            )
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-selected-pair\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_selected_pair_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-selected-pair\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_selected_pair_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "new-selected-pair-full")]
-    pub fn connect_new_selected_pair_full<F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn new_selected_pair_full_trampoline<F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, lcandidate: *mut ffi::NiceCandidate, rcandidate: *mut ffi::NiceCandidate, f: glib::ffi::gpointer) {
+    pub fn connect_new_selected_pair_full<
+        F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static,
+    >(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn new_selected_pair_full_trampoline<
+            F: Fn(&Agent, u32, u32, &Candidate, &Candidate) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            lcandidate: *mut ffi::NiceCandidate,
+            rcandidate: *mut ffi::NiceCandidate,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
-            f(&from_glib_borrow(this), stream_id, component_id, &from_glib_borrow(lcandidate), &from_glib_borrow(rcandidate))
+            f(
+                &from_glib_borrow(this),
+                stream_id,
+                component_id,
+                &from_glib_borrow(lcandidate),
+                &from_glib_borrow(rcandidate),
+            )
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"new-selected-pair-full\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(new_selected_pair_full_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"new-selected-pair-full\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    new_selected_pair_full_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "reliable-transport-writable")]
-    pub fn connect_reliable_transport_writable<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn reliable_transport_writable_trampoline<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, stream_id: libc::c_uint, component_id: libc::c_uint, f: glib::ffi::gpointer) {
+    pub fn connect_reliable_transport_writable<F: Fn(&Agent, u32, u32) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn reliable_transport_writable_trampoline<
+            F: Fn(&Agent, u32, u32) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            stream_id: libc::c_uint,
+            component_id: libc::c_uint,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this), stream_id, component_id)
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"reliable-transport-writable\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(reliable_transport_writable_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"reliable-transport-writable\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    reliable_transport_writable_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
@@ -969,319 +1618,682 @@ impl Agent {
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "bytestream-tcp")]
-    pub fn connect_bytestream_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_bytestream_tcp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_bytestream_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_bytestream_tcp_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::bytestream-tcp\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_bytestream_tcp_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::bytestream-tcp\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_bytestream_tcp_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "controlling-mode")]
-    pub fn connect_controlling_mode_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_controlling_mode_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_controlling_mode_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_controlling_mode_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::controlling-mode\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_controlling_mode_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::controlling-mode\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_controlling_mode_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_14", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_14")))]
     #[doc(alias = "force-relay")]
-    pub fn connect_force_relay_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_force_relay_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_force_relay_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_force_relay_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::force-relay\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_force_relay_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::force-relay\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_force_relay_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "ice-tcp")]
-    pub fn connect_ice_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_tcp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_ice_tcp_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_tcp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::ice-tcp\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_ice_tcp_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::ice-tcp\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_ice_tcp_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_16", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_16")))]
     #[doc(alias = "ice-trickle")]
-    pub fn connect_ice_trickle_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_trickle_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_ice_trickle_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_trickle_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::ice-trickle\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_ice_trickle_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::ice-trickle\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_ice_trickle_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "ice-udp")]
-    pub fn connect_ice_udp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_ice_udp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_ice_udp_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_ice_udp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::ice-udp\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_ice_udp_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::ice-udp\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_ice_udp_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_17", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_17")))]
     #[doc(alias = "idle-timeout")]
-    pub fn connect_idle_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_idle_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_idle_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_idle_timeout_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::idle-timeout\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_idle_timeout_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::idle-timeout\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_idle_timeout_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_8", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_8")))]
     #[doc(alias = "keepalive-conncheck")]
-    pub fn connect_keepalive_conncheck_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_keepalive_conncheck_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_keepalive_conncheck_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_keepalive_conncheck_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::keepalive-conncheck\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_keepalive_conncheck_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::keepalive-conncheck\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_keepalive_conncheck_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "max-connectivity-checks")]
-    pub fn connect_max_connectivity_checks_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_max_connectivity_checks_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_max_connectivity_checks_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_max_connectivity_checks_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::max-connectivity-checks\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_max_connectivity_checks_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::max-connectivity-checks\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_max_connectivity_checks_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
+        }
+    }
+
+    #[cfg(any(feature = "v0_1_20", feature = "dox"))]
+    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_20")))]
+    #[doc(alias = "proxy-extra-headers")]
+    pub fn connect_proxy_extra_headers_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_extra_headers_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
+            let f: &F = &*(f as *const F);
+            f(&from_glib_borrow(this))
+        }
+        unsafe {
+            let f: Box_<F> = Box_::new(f);
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-extra-headers\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_extra_headers_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "proxy-ip")]
-    pub fn connect_proxy_ip_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_ip_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_proxy_ip_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_ip_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::proxy-ip\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_proxy_ip_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-ip\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_ip_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "proxy-password")]
-    pub fn connect_proxy_password_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_password_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_proxy_password_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_password_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::proxy-password\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_proxy_password_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-password\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_password_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "proxy-port")]
-    pub fn connect_proxy_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_port_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_proxy_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_port_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::proxy-port\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_proxy_port_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-port\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_port_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "proxy-type")]
-    pub fn connect_proxy_type_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_type_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_proxy_type_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_type_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::proxy-type\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_proxy_type_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-type\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_type_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "proxy-username")]
-    pub fn connect_proxy_username_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_proxy_username_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_proxy_username_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_proxy_username_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::proxy-username\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_proxy_username_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::proxy-username\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_proxy_username_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
     #[doc(alias = "stun-initial-timeout")]
-    pub fn connect_stun_initial_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_initial_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_initial_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_initial_timeout_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-initial-timeout\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_initial_timeout_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-initial-timeout\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_initial_timeout_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
     #[doc(alias = "stun-max-retransmissions")]
-    pub fn connect_stun_max_retransmissions_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_max_retransmissions_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_max_retransmissions_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_max_retransmissions_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-max-retransmissions\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_max_retransmissions_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-max-retransmissions\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_max_retransmissions_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "stun-pacing-timer")]
-    pub fn connect_stun_pacing_timer_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_pacing_timer_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_pacing_timer_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_pacing_timer_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-pacing-timer\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_pacing_timer_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-pacing-timer\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_pacing_timer_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[cfg(any(feature = "v0_1_15", feature = "dox"))]
     #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
     #[doc(alias = "stun-reliable-timeout")]
-    pub fn connect_stun_reliable_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_reliable_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_reliable_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_reliable_timeout_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-reliable-timeout\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_reliable_timeout_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-reliable-timeout\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_reliable_timeout_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "stun-server")]
-    pub fn connect_stun_server_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_server_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_server_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_server_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-server\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_server_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-server\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_server_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "stun-server-port")]
-    pub fn connect_stun_server_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_stun_server_port_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_stun_server_port_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_stun_server_port_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::stun-server-port\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_stun_server_port_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::stun-server-port\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_stun_server_port_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "support-renomination")]
-    pub fn connect_support_renomination_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_support_renomination_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_support_renomination_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_support_renomination_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::support-renomination\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_support_renomination_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::support-renomination\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_support_renomination_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "upnp")]
-    pub fn connect_upnp_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_upnp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_upnp_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_upnp_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::upnp\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_upnp_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::upnp\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_upnp_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 
     #[doc(alias = "upnp-timeout")]
-    pub fn connect_upnp_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(&self, f: F) -> SignalHandlerId {
-        unsafe extern "C" fn notify_upnp_timeout_trampoline<F: Fn(&Agent) + Send + Sync + 'static>(this: *mut ffi::NiceAgent, _param_spec: glib::ffi::gpointer, f: glib::ffi::gpointer) {
+    pub fn connect_upnp_timeout_notify<F: Fn(&Agent) + Send + Sync + 'static>(
+        &self,
+        f: F,
+    ) -> SignalHandlerId {
+        unsafe extern "C" fn notify_upnp_timeout_trampoline<
+            F: Fn(&Agent) + Send + Sync + 'static,
+        >(
+            this: *mut ffi::NiceAgent,
+            _param_spec: glib::ffi::gpointer,
+            f: glib::ffi::gpointer,
+        ) {
             let f: &F = &*(f as *const F);
             f(&from_glib_borrow(this))
         }
         unsafe {
             let f: Box_<F> = Box_::new(f);
-            connect_raw(self.as_ptr() as *mut _, b"notify::upnp-timeout\0".as_ptr() as *const _,
-                Some(transmute::<_, unsafe extern "C" fn()>(notify_upnp_timeout_trampoline::<F> as *const ())), Box_::into_raw(f))
+            connect_raw(
+                self.as_ptr() as *mut _,
+                b"notify::upnp-timeout\0".as_ptr() as *const _,
+                Some(transmute::<_, unsafe extern "C" fn()>(
+                    notify_upnp_timeout_trampoline::<F> as *const (),
+                )),
+                Box_::into_raw(f),
+            )
         }
     }
 }

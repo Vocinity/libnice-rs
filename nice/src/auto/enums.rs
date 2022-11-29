@@ -3,14 +3,9 @@
 // DO NOT EDIT
 
 use glib::translate::*;
-use glib::value::FromValue;
-use glib::value::ToValue;
-use glib::StaticType;
-use glib::Type;
 use std::fmt;
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceCandidateTransport")]
 pub enum CandidateTransport {
@@ -22,32 +17,23 @@ pub enum CandidateTransport {
     TcpPassive,
     #[doc(alias = "NICE_CANDIDATE_TRANSPORT_TCP_SO")]
     TcpSo,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
-}
-
-impl CandidateTransport {
-    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
-    #[doc(alias = "nice_candidate_transport_to_string")]
-    #[doc(alias = "to_string")]
-    pub fn to_str(self) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_transport_to_string(self.into_glib()))
-        }
-    }
 }
 
 impl fmt::Display for CandidateTransport {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "CandidateTransport::{}", match *self {
-            Self::Udp => "Udp",
-            Self::TcpActive => "TcpActive",
-            Self::TcpPassive => "TcpPassive",
-            Self::TcpSo => "TcpSo",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "CandidateTransport::{}",
+            match *self {
+                Self::Udp => "Udp",
+                Self::TcpActive => "TcpActive",
+                Self::TcpPassive => "TcpPassive",
+                Self::TcpSo => "TcpSo",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -62,7 +48,7 @@ impl IntoGlib for CandidateTransport {
             Self::TcpPassive => ffi::NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE,
             Self::TcpSo => ffi::NICE_CANDIDATE_TRANSPORT_TCP_SO,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -76,45 +62,11 @@ impl FromGlib<ffi::NiceCandidateTransport> for CandidateTransport {
             2 => Self::TcpPassive,
             3 => Self::TcpSo,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for CandidateTransport {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_candidate_transport_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for CandidateTransport {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for CandidateTransport {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for CandidateTransport {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceCandidateType")]
 pub enum CandidateType {
@@ -126,32 +78,23 @@ pub enum CandidateType {
     PeerReflexive,
     #[doc(alias = "NICE_CANDIDATE_TYPE_RELAYED")]
     Relayed,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
-}
-
-impl CandidateType {
-    #[cfg(any(feature = "v0_1_18", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_18")))]
-    #[doc(alias = "nice_candidate_type_to_string")]
-    #[doc(alias = "to_string")]
-    pub fn to_str(self) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_type_to_string(self.into_glib()))
-        }
-    }
 }
 
 impl fmt::Display for CandidateType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "CandidateType::{}", match *self {
-            Self::Host => "Host",
-            Self::ServerReflexive => "ServerReflexive",
-            Self::PeerReflexive => "PeerReflexive",
-            Self::Relayed => "Relayed",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "CandidateType::{}",
+            match *self {
+                Self::Host => "Host",
+                Self::ServerReflexive => "ServerReflexive",
+                Self::PeerReflexive => "PeerReflexive",
+                Self::Relayed => "Relayed",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -166,7 +109,7 @@ impl IntoGlib for CandidateType {
             Self::PeerReflexive => ffi::NICE_CANDIDATE_TYPE_PEER_REFLEXIVE,
             Self::Relayed => ffi::NICE_CANDIDATE_TYPE_RELAYED,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -180,45 +123,11 @@ impl FromGlib<ffi::NiceCandidateType> for CandidateType {
             2 => Self::PeerReflexive,
             3 => Self::Relayed,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for CandidateType {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_candidate_type_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for CandidateType {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for CandidateType {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for CandidateType {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceCompatibility")]
 pub enum Compatibility {
@@ -234,21 +143,25 @@ pub enum Compatibility {
     Oc2007,
     #[doc(alias = "NICE_COMPATIBILITY_OC2007R2")]
     Oc2007r2,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for Compatibility {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Compatibility::{}", match *self {
-            Self::Rfc5245 => "Rfc5245",
-            Self::Google => "Google",
-            Self::Msn => "Msn",
-            Self::Wlm2009 => "Wlm2009",
-            Self::Oc2007 => "Oc2007",
-            Self::Oc2007r2 => "Oc2007r2",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "Compatibility::{}",
+            match *self {
+                Self::Rfc5245 => "Rfc5245",
+                Self::Google => "Google",
+                Self::Msn => "Msn",
+                Self::Wlm2009 => "Wlm2009",
+                Self::Oc2007 => "Oc2007",
+                Self::Oc2007r2 => "Oc2007r2",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -265,7 +178,7 @@ impl IntoGlib for Compatibility {
             Self::Oc2007 => ffi::NICE_COMPATIBILITY_OC2007,
             Self::Oc2007r2 => ffi::NICE_COMPATIBILITY_OC2007R2,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -281,45 +194,11 @@ impl FromGlib<ffi::NiceCompatibility> for Compatibility {
             4 => Self::Oc2007,
             5 => Self::Oc2007r2,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for Compatibility {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_compatibility_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for Compatibility {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for Compatibility {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for Compatibility {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceComponentState")]
 pub enum ComponentState {
@@ -335,34 +214,25 @@ pub enum ComponentState {
     Ready,
     #[doc(alias = "NICE_COMPONENT_STATE_FAILED")]
     Failed,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
-}
-
-impl ComponentState {
-    #[cfg(any(feature = "v0_1_6", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_6")))]
-    #[doc(alias = "nice_component_state_to_string")]
-    #[doc(alias = "to_string")]
-    pub fn to_str(self) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_component_state_to_string(self.into_glib()))
-        }
-    }
 }
 
 impl fmt::Display for ComponentState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ComponentState::{}", match *self {
-            Self::Disconnected => "Disconnected",
-            Self::Gathering => "Gathering",
-            Self::Connecting => "Connecting",
-            Self::Connected => "Connected",
-            Self::Ready => "Ready",
-            Self::Failed => "Failed",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ComponentState::{}",
+            match *self {
+                Self::Disconnected => "Disconnected",
+                Self::Gathering => "Gathering",
+                Self::Connecting => "Connecting",
+                Self::Connected => "Connected",
+                Self::Ready => "Ready",
+                Self::Failed => "Failed",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -379,7 +249,7 @@ impl IntoGlib for ComponentState {
             Self::Ready => ffi::NICE_COMPONENT_STATE_READY,
             Self::Failed => ffi::NICE_COMPONENT_STATE_FAILED,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -395,45 +265,11 @@ impl FromGlib<ffi::NiceComponentState> for ComponentState {
             4 => Self::Ready,
             5 => Self::Failed,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for ComponentState {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_component_state_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for ComponentState {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for ComponentState {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for ComponentState {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceComponentType")]
 pub enum ComponentType {
@@ -441,17 +277,21 @@ pub enum ComponentType {
     Rtp,
     #[doc(alias = "NICE_COMPONENT_TYPE_RTCP")]
     Rtcp,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for ComponentType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ComponentType::{}", match *self {
-            Self::Rtp => "Rtp",
-            Self::Rtcp => "Rtcp",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ComponentType::{}",
+            match *self {
+                Self::Rtp => "Rtp",
+                Self::Rtcp => "Rtcp",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -464,7 +304,7 @@ impl IntoGlib for ComponentType {
             Self::Rtp => ffi::NICE_COMPONENT_TYPE_RTP,
             Self::Rtcp => ffi::NICE_COMPONENT_TYPE_RTCP,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -476,47 +316,13 @@ impl FromGlib<ffi::NiceComponentType> for ComponentType {
             1 => Self::Rtp,
             2 => Self::Rtcp,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for ComponentType {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_component_type_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for ComponentType {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for ComponentType {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for ComponentType {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
 #[cfg(any(feature = "v0_1_15", feature = "dox"))]
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceNominationMode")]
 pub enum NominationMode {
@@ -524,7 +330,7 @@ pub enum NominationMode {
     Regular,
     #[doc(alias = "NICE_NOMINATION_MODE_AGGRESSIVE")]
     Aggressive,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
@@ -532,11 +338,15 @@ pub enum NominationMode {
 #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
 impl fmt::Display for NominationMode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "NominationMode::{}", match *self {
-            Self::Regular => "Regular",
-            Self::Aggressive => "Aggressive",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "NominationMode::{}",
+            match *self {
+                Self::Regular => "Regular",
+                Self::Aggressive => "Aggressive",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -551,7 +361,7 @@ impl IntoGlib for NominationMode {
             Self::Regular => ffi::NICE_NOMINATION_MODE_REGULAR,
             Self::Aggressive => ffi::NICE_NOMINATION_MODE_AGGRESSIVE,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -565,53 +375,11 @@ impl FromGlib<ffi::NiceNominationMode> for NominationMode {
             0 => Self::Regular,
             1 => Self::Aggressive,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl StaticType for NominationMode {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_nomination_mode_get_type()) }
-    }
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl glib::value::ValueType for NominationMode {
-    type Type = Self;
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-unsafe impl<'a> FromValue<'a> for NominationMode {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-impl ToValue for NominationMode {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceProxyType")]
 pub enum ProxyType {
@@ -621,18 +389,22 @@ pub enum ProxyType {
     Socks5,
     #[doc(alias = "NICE_PROXY_TYPE_HTTP")]
     Http,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for ProxyType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ProxyType::{}", match *self {
-            Self::None => "None",
-            Self::Socks5 => "Socks5",
-            Self::Http => "Http",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "ProxyType::{}",
+            match *self {
+                Self::None => "None",
+                Self::Socks5 => "Socks5",
+                Self::Http => "Http",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -646,7 +418,7 @@ impl IntoGlib for ProxyType {
             Self::Socks5 => ffi::NICE_PROXY_TYPE_SOCKS5,
             Self::Http => ffi::NICE_PROXY_TYPE_HTTP,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -659,45 +431,11 @@ impl FromGlib<ffi::NiceProxyType> for ProxyType {
             1 => Self::Socks5,
             2 => Self::Http,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for ProxyType {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_proxy_type_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for ProxyType {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for ProxyType {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for ProxyType {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Clone, Copy)]
 #[non_exhaustive]
 #[doc(alias = "NiceRelayType")]
 pub enum RelayType {
@@ -707,18 +445,22 @@ pub enum RelayType {
     Tcp,
     #[doc(alias = "NICE_RELAY_TYPE_TURN_TLS")]
     Tls,
-#[doc(hidden)]
+    #[doc(hidden)]
     __Unknown(i32),
 }
 
 impl fmt::Display for RelayType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "RelayType::{}", match *self {
-            Self::Udp => "Udp",
-            Self::Tcp => "Tcp",
-            Self::Tls => "Tls",
-            _ => "Unknown",
-        })
+        write!(
+            f,
+            "RelayType::{}",
+            match *self {
+                Self::Udp => "Udp",
+                Self::Tcp => "Tcp",
+                Self::Tls => "Tls",
+                _ => "Unknown",
+            }
+        )
     }
 }
 
@@ -732,7 +474,7 @@ impl IntoGlib for RelayType {
             Self::Tcp => ffi::NICE_RELAY_TYPE_TURN_TCP,
             Self::Tls => ffi::NICE_RELAY_TYPE_TURN_TLS,
             Self::__Unknown(value) => value,
-}
+        }
     }
 }
 
@@ -745,40 +487,6 @@ impl FromGlib<ffi::NiceRelayType> for RelayType {
             1 => Self::Tcp,
             2 => Self::Tls,
             value => Self::__Unknown(value),
-}
-    }
-}
-
-impl StaticType for RelayType {
-    fn static_type() -> Type {
-        unsafe { from_glib(ffi::nice_relay_type_get_type()) }
-    }
-}
-
-impl glib::value::ValueType for RelayType {
-    type Type = Self;
-}
-
-unsafe impl<'a> FromValue<'a> for RelayType {
-    type Checker = glib::value::GenericValueTypeChecker<Self>;
-
-    unsafe fn from_value(value: &'a glib::Value) -> Self {
-        skip_assert_initialized!();
-        from_glib(glib::gobject_ffi::g_value_get_enum(value.to_glib_none().0))
-    }
-}
-
-impl ToValue for RelayType {
-    fn to_value(&self) -> glib::Value {
-        let mut value = glib::Value::for_value_type::<Self>();
-        unsafe {
-            glib::gobject_ffi::g_value_set_enum(value.to_glib_none_mut().0, self.into_glib());
         }
-        value
-    }
-
-    fn value_type(&self) -> glib::Type {
-        Self::static_type()
     }
 }
-
