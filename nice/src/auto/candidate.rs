@@ -3,6 +3,9 @@
 // DO NOT EDIT
 
 use crate::{CandidateType};
+#[cfg(feature = "v0_1_19")]
+#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_19")))]
+use crate::{Address};
 use glib::{translate::*};
 
 glib::wrapper! {
@@ -34,19 +37,23 @@ impl Candidate {
         }
     }
 
-    //#[cfg(feature = "v0_1_19")]
-    //#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_19")))]
-    //#[doc(alias = "nice_candidate_relay_address")]
-    //pub fn relay_address(&self, addr: /*Ignored*/&mut Address) {
-    //    unsafe { TODO: call ffi:nice_candidate_relay_address() }
-    //}
+    #[cfg(feature = "v0_1_19")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v0_1_19")))]
+    #[doc(alias = "nice_candidate_relay_address")]
+    pub fn relay_address(&self, addr: &mut Address) {
+        unsafe {
+            ffi::nice_candidate_relay_address(self.to_glib_none().0, addr.to_glib_none_mut().0);
+        }
+    }
 
-    //#[cfg(feature = "v0_1_20")]
-    //#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_20")))]
-    //#[doc(alias = "nice_candidate_stun_server_address")]
-    //pub fn stun_server_address(&self, addr: /*Ignored*/&mut Address) -> bool {
-    //    unsafe { TODO: call ffi:nice_candidate_stun_server_address() }
-    //}
+    #[cfg(feature = "v0_1_20")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v0_1_20")))]
+    #[doc(alias = "nice_candidate_stun_server_address")]
+    pub fn stun_server_address(&self, addr: &mut Address) -> bool {
+        unsafe {
+            from_glib(ffi::nice_candidate_stun_server_address(self.to_glib_none().0, addr.to_glib_none_mut().0))
+        }
+    }
 }
 
 unsafe impl Send for Candidate {}

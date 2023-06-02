@@ -69,6 +69,13 @@ status = "generate"
     ignore = true
 
 [[object]]
+name = "Nice.Address"
+status =  "generate"
+    [[object.function]]
+    name = "set_ipv6"
+    ignore = true
+
+[[object]]
 name = "Nice.ComponentState"
 status = "generate"
     [[object.member]]

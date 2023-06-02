@@ -5,6 +5,9 @@
 mod agent;
 pub use self::agent::Agent;
 
+mod address;
+pub use self::address::Address;
+
 mod candidate;
 pub use self::candidate::Candidate;
 
