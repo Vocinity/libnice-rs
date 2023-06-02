@@ -23,8 +23,3 @@ pub use self::enums::NominationMode;
 pub use self::enums::ProxyType;
 pub use self::enums::RelayType;
 
-mod flags;
-#[cfg(feature = "v0_1_15")]
-#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
-pub use self::flags::AgentOption;
-

@@ -8,7 +8,7 @@ use crate::{Address,Candidate,Compatibility,RelayType};
 use crate::{ComponentState};
 #[cfg(feature = "v0_1_15")]
 #[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
-use crate::{AgentOption,NominationMode};
+use crate::{NominationMode};
 use glib::{prelude::*,signal::{connect_raw, SignalHandlerId},translate::*};
 use std::{boxed::Box as Box_,mem::transmute,ptr};
 
@@ -30,15 +30,12 @@ impl Agent {
         }
     }
 
-    #[cfg(feature = "v0_1_15")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
-    #[doc(alias = "nice_agent_new_full")]
-    pub fn new_full(ctx: &glib::MainContext, compat: Compatibility, flags: AgentOption) -> Agent {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_full(ffi::nice_agent_new_full(ctx.to_glib_none().0, compat.into_glib(), flags.into_glib()))
-        }
-    }
+    //#[cfg(feature = "v0_1_15")]
+    //#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
+    //#[doc(alias = "nice_agent_new_full")]
+    //pub fn new_full(ctx: &glib::MainContext, compat: Compatibility, flags: /*Ignored*/AgentOption) -> Agent {
+    //    unsafe { TODO: call ffi:nice_agent_new_full() }
+    //}
 
     #[doc(alias = "nice_agent_new_reliable")]
     pub fn new_reliable(ctx: &glib::MainContext, compat: Compatibility) -> Agent {

@@ -21,7 +21,7 @@ external_libraries = [
 generate = [
   "Nice.ComponentType",
   "Nice.Compatibility",
-  "Nice.AgentOption",
+#  "Nice.AgentOption",
   "Nice.RelayType",
   "Nice.CandidateType",
   "Nice.CandidateTransport",
