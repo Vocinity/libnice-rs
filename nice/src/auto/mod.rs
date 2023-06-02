@@ -14,16 +14,14 @@ pub use self::enums::CandidateType;
 pub use self::enums::Compatibility;
 pub use self::enums::ComponentState;
 pub use self::enums::ComponentType;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+#[cfg(feature = "v0_1_15")]
+#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
 pub use self::enums::NominationMode;
 pub use self::enums::ProxyType;
 pub use self::enums::RelayType;
 
 mod flags;
-#[cfg(any(feature = "v0_1_15", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
+#[cfg(feature = "v0_1_15")]
+#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
 pub use self::flags::AgentOption;
 
-#[doc(hidden)]
-pub mod traits {}

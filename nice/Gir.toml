@@ -3,12 +3,14 @@ girs_directories = ["../gir-files"]
 library = "Nice"
 version = "0.1"
 target_path = "."
-min_cfg_version = "0.1"
+min_cfg_version = "0.1.4"
 work_mode = "normal"
 concurrency = "send+sync"
 generate_safety_asserts = true
 deprecate_by_min_version = true
 single_version_file = true
+generate_display_trait = false
+trust_return_value_nullability = true
 
 external_libraries = [
   "Glib",
@@ -59,6 +61,11 @@ status = "generate"
     [[object.function]]
     name = "set_remote_candidates"
     # no method named `to_glib_none` found for reference `&[&candidate::Candidate]` in the current scope
+    ignore = true
+
+    [[object.function]]
+    name = "parse_remote_stream_sdp"
+    # error[E0277]: the trait bound `str: glib::translate::ToGlibPtr<'_, *mut *mut i8>` is not satisfied for str (ufrag,pwd)
     ignore = true
 
 [[object]]

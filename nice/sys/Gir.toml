@@ -1,15 +1,25 @@
 [options]
-girs_dir = "../../gir-files"
+girs_directories = ["../../gir-files"]
 library = "Nice"
 version = "0.1"
 target_path = "."
-min_cfg_version = "0.1"
+min_cfg_version = "0.1.4"
 work_mode="sys"
+single_version_file = true
 
-external_libraries = [
-  "Glib",
+extra_versions = [
+  "0.1.5",
+  "0.1.6",
+  "0.1.8",
+  "0.1.14",
+  "0.1.15",
+  "0.1.16",
+  "0.1.17",    
+  "0.1.18",
 ]
 
-[external_libraries] 
-gio="Gio" 
+[external_libraries]
+gio="Gio"
 gobject="GObject"
+glib="GLib"
+

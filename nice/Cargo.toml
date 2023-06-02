@@ -8,10 +8,11 @@ description  = "Rust bindings for libnice"
 license = "MIT"
 
 [dependencies]
-ffi = { package = "n-sys", path = "sys", version = "0.1.0", features = ["v0_1_4"]}
-glib = { version = "0.16", package = "glib" }
+ffi = { package = "n-sys", path = "sys" }
+glib = "0.17"
+gio = "0.17"
 libc = "0.2"
-bitflags = "1.2"
+bitflags = "2.3"
 
 [features]
 default = []
@@ -23,3 +24,5 @@ v0_1_15 = ["ffi/v0_1_15", "v0_1_14"]
 v0_1_16 = ["ffi/v0_1_16", "v0_1_15"]
 v0_1_17 = ["ffi/v0_1_17", "v0_1_16"]
 v0_1_18 = ["ffi/v0_1_18", "v0_1_17"]
+v0_1_19 = ["ffi/v0_1_19", "v0_1_18"]
+v0_1_20 = ["ffi/v0_1_20", "v0_1_19"]

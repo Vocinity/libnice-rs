@@ -2,11 +2,8 @@
 // from ../gir-files
 // DO NOT EDIT
 
-#[cfg(any(feature = "v0_1_19", feature = "dox"))]
-#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
-use crate::CandidateTransport;
-use crate::CandidateType;
-use glib::translate::*;
+use crate::{CandidateType};
+use glib::{translate::*};
 
 glib::wrapper! {
     #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -23,54 +20,33 @@ impl Candidate {
     #[doc(alias = "nice_candidate_new")]
     pub fn new(type_: CandidateType) -> Candidate {
         assert_initialized_main_thread!();
-        unsafe { from_glib_full(ffi::nice_candidate_new(type_.into_glib())) }
-    }
-
-    #[cfg(any(feature = "v0_1_15", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_15")))]
-    #[doc(alias = "nice_candidate_equal_target")]
-    pub fn equal_target(&self, candidate2: &Candidate) -> bool {
         unsafe {
-            from_glib(ffi::nice_candidate_equal_target(
-                self.to_glib_none().0,
-                candidate2.to_glib_none().0,
-            ))
+            from_glib_full(ffi::nice_candidate_new(type_.into_glib()))
         }
     }
 
-    //#[cfg(any(feature = "v0_1_19", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
+    #[cfg(feature = "v0_1_15")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "v0_1_15")))]
+    #[doc(alias = "nice_candidate_equal_target")]
+    pub fn equal_target(&self, candidate2: &Candidate) -> bool {
+        unsafe {
+            from_glib(ffi::nice_candidate_equal_target(self.to_glib_none().0, candidate2.to_glib_none().0))
+        }
+    }
+
+    //#[cfg(feature = "v0_1_19")]
+    //#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_19")))]
     //#[doc(alias = "nice_candidate_relay_address")]
     //pub fn relay_address(&self, addr: /*Ignored*/&mut Address) {
     //    unsafe { TODO: call ffi:nice_candidate_relay_address() }
     //}
 
-    //#[cfg(any(feature = "v0_1_20", feature = "dox"))]
-    //#[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_20")))]
+    //#[cfg(feature = "v0_1_20")]
+    //#[cfg_attr(docsrs, doc(cfg(feature = "v0_1_20")))]
     //#[doc(alias = "nice_candidate_stun_server_address")]
     //pub fn stun_server_address(&self, addr: /*Ignored*/&mut Address) -> bool {
     //    unsafe { TODO: call ffi:nice_candidate_stun_server_address() }
     //}
-
-    #[cfg(any(feature = "v0_1_19", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
-    #[doc(alias = "nice_candidate_transport_to_string")]
-    pub fn transport_to_string(transport: CandidateTransport) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe {
-            from_glib_none(ffi::nice_candidate_transport_to_string(
-                transport.into_glib(),
-            ))
-        }
-    }
-
-    #[cfg(any(feature = "v0_1_19", feature = "dox"))]
-    #[cfg_attr(feature = "dox", doc(cfg(feature = "v0_1_19")))]
-    #[doc(alias = "nice_candidate_type_to_string")]
-    pub fn type_to_string(type_: CandidateType) -> Option<glib::GString> {
-        assert_initialized_main_thread!();
-        unsafe { from_glib_none(ffi::nice_candidate_type_to_string(type_.into_glib())) }
-    }
 }
 
 unsafe impl Send for Candidate {}

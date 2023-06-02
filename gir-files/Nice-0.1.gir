@@ -6,11 +6,11 @@ and/or use gtk-doc annotations.  -->
             xmlns="http://www.gtk.org/introspection/core/1.0"
             xmlns:c="http://www.gtk.org/introspection/c/1.0"
             xmlns:glib="http://www.gtk.org/introspection/glib/1.0">
+  <include name="GLib" version="2.0"/>
   <include name="GObject" version="2.0"/>
   <include name="Gio" version="2.0"/>
   <package name="nice"/>
   <namespace name="Nice"
-             version="0.1"
              shared-library="libnice.so.10"
              c:identifier-prefixes="Nice"
              c:symbol-prefixes="nice">
@@ -134,6 +134,28 @@ You must free it with nice_address_free()</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="dup_string"
+              c:identifier="nice_address_dup_string"
+              version="0.1.20">
+        <doc xml:space="preserve"
+             filename="agent/address.h"
+             line="273">Transforms the address @addr into a newly allocated human readable string</doc>
+        <source-position filename="agent/address.h" line="284"/>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve"
+               filename="agent/address.h"
+               line="279">the address string</doc>
+          <type name="utf8" c:type="gchar*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="addr" transfer-ownership="none">
+            <doc xml:space="preserve"
+                 filename="agent/address.h"
+                 line="275">The #NiceAddress to query</doc>
+            <type name="Address" c:type="const NiceAddress*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="equal" c:identifier="nice_address_equal">
         <doc xml:space="preserve"
              filename="agent/address.h"
@@ -248,19 +270,19 @@ are different</doc>
       <method name="ip_version" c:identifier="nice_address_ip_version">
         <doc xml:space="preserve"
              filename="agent/address.h"
-             line="309">Returns the IP version of the address</doc>
-        <source-position filename="agent/address.h" line="319"/>
+             line="322">Returns the IP version of the address</doc>
+        <source-position filename="agent/address.h" line="332"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="agent/address.h"
-               line="315">4 for IPv4, 6 for IPv6 and 0 for undefined address</doc>
+               line="328">4 for IPv4, 6 for IPv6 and 0 for undefined address</doc>
           <type name="gint" c:type="int"/>
         </return-value>
         <parameters>
           <instance-parameter name="addr" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="agent/address.h"
-                 line="311">The #NiceAddress to query</doc>
+                 line="324">The #NiceAddress to query</doc>
             <type name="Address" c:type="const NiceAddress*"/>
           </instance-parameter>
         </parameters>
@@ -270,52 +292,12 @@ are different</doc>
               version="0.1.19">
         <doc xml:space="preserve"
              filename="agent/address.h"
-             line="284">Verifies if the address in @addr is a link-local address or not</doc>
-        <source-position filename="agent/address.h" line="295"/>
+             line="297">Verifies if the address in @addr is a link-local address or not</doc>
+        <source-position filename="agent/address.h" line="308"/>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve"
                filename="agent/address.h"
-               line="290">%TRUE if @addr is a link-local address, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="addr" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/address.h"
-                 line="286">The #NiceAddress to query</doc>
-            <type name="Address" c:type="const NiceAddress*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="is_private" c:identifier="nice_address_is_private">
-        <doc xml:space="preserve"
-             filename="agent/address.h"
-             line="273">Verifies if the address in @addr is a private address or not</doc>
-        <source-position filename="agent/address.h" line="282"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/address.h"
-               line="279">%TRUE if @addr is a private address, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="addr" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/address.h"
-                 line="275">The #NiceAddress to query</doc>
-            <type name="Address" c:type="const NiceAddress*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="is_valid" c:identifier="nice_address_is_valid">
-        <doc xml:space="preserve"
-             filename="agent/address.h"
-             line="297">Validate whether the #NiceAddress @addr is a valid IPv4 or IPv6 address</doc>
-        <source-position filename="agent/address.h" line="307"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/address.h"
-               line="303">%TRUE if @addr is valid, %FALSE otherwise</doc>
+               line="303">%TRUE if @addr is a link-local address, %FALSE otherwise</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -323,6 +305,46 @@ are different</doc>
             <doc xml:space="preserve"
                  filename="agent/address.h"
                  line="299">The #NiceAddress to query</doc>
+            <type name="Address" c:type="const NiceAddress*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="is_private" c:identifier="nice_address_is_private">
+        <doc xml:space="preserve"
+             filename="agent/address.h"
+             line="286">Verifies if the address in @addr is a private address or not</doc>
+        <source-position filename="agent/address.h" line="295"/>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve"
+               filename="agent/address.h"
+               line="292">%TRUE if @addr is a private address, %FALSE otherwise</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="addr" transfer-ownership="none">
+            <doc xml:space="preserve"
+                 filename="agent/address.h"
+                 line="288">The #NiceAddress to query</doc>
+            <type name="Address" c:type="const NiceAddress*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="is_valid" c:identifier="nice_address_is_valid">
+        <doc xml:space="preserve"
+             filename="agent/address.h"
+             line="310">Validate whether the #NiceAddress @addr is a valid IPv4 or IPv6 address</doc>
+        <source-position filename="agent/address.h" line="320"/>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve"
+               filename="agent/address.h"
+               line="316">%TRUE if @addr is valid, %FALSE otherwise</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="addr" transfer-ownership="none">
+            <doc xml:space="preserve"
+                 filename="agent/address.h"
+                 line="312">The #NiceAddress to query</doc>
             <type name="Address" c:type="const NiceAddress*"/>
           </instance-parameter>
         </parameters>
@@ -464,7 +486,9 @@ are different</doc>
           </parameter>
         </parameters>
       </method>
-      <method name="to_string" c:identifier="nice_address_to_string">
+      <method name="to_string"
+              c:identifier="nice_address_to_string"
+              introspectable="0">
         <doc xml:space="preserve"
              filename="agent/address.h"
              line="262">Transforms the address @addr into a human readable string</doc>
@@ -2338,7 +2362,7 @@ discovery process; one TCP and one UDP, for example.</doc>
           <parameter name="server_ip" transfer-ownership="none">
             <doc xml:space="preserve"
                  filename="agent/agent.h"
-                 line="585">The IP address of the TURN server</doc>
+                 line="585">The address of the TURN server</doc>
             <type name="utf8" c:type="const gchar*"/>
           </parameter>
           <parameter name="server_port" transfer-ownership="none">
@@ -2900,7 +2924,6 @@ This is a property being set by the nice_agent_new() call.</doc>
       </property>
       <property name="nomination-mode"
                 version="0.1.15"
-                introspectable="0"
                 writable="1"
                 construct-only="1"
                 transfer-ownership="none">
@@ -2909,7 +2932,7 @@ This is a property being set by the nice_agent_new() call.</doc>
              line="460">The nomination mode used in the ICE specification for describing
 the selection of valid pairs to be used upstream.
 &lt;para&gt; See also: #NiceNominationMode &lt;/para&gt;</doc>
-        <type/>
+        <type name="NominationMode"/>
       </property>
       <property name="proxy-extra-headers"
                 version="0.1.20"
@@ -3395,21 +3418,30 @@ unsigned integer stream IDs, ending with a 0 ID</doc>
         <type name="GObject.ObjectClass" c:type="GObjectClass"/>
       </field>
     </record>
-    <bitfield name="AgentOption" version="0.1.15" c:type="NiceAgentOption">
+    <bitfield name="AgentOption"
+              version="0.1.15"
+              glib:type-name="NiceAgentOption"
+              glib:get-type="nice_agent_option_get_type"
+              c:type="NiceAgentOption">
       <doc xml:space="preserve"
            filename="agent/agent.h"
            line="403">These are options that can be passed to nice_agent_new_full(). They set
 various properties on the agent. Not including them sets the property to
 the other value.</doc>
-      <source-position filename="agent/agent.h" line="431"/>
-      <member name="none" value="0" c:identifier="NICE_AGENT_OPTION_NONE">
+      <member name="none"
+              value="0"
+              c:identifier="NICE_AGENT_OPTION_NONE"
+              glib:nick="none"
+              glib:name="NICE_AGENT_OPTION_NONE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="405">No enabled options (Since: 0.1.19)</doc>
       </member>
       <member name="regular_nomination"
               value="1"
-              c:identifier="NICE_AGENT_OPTION_REGULAR_NOMINATION">
+              c:identifier="NICE_AGENT_OPTION_REGULAR_NOMINATION"
+              glib:nick="regular-nomination"
+              glib:name="NICE_AGENT_OPTION_REGULAR_NOMINATION">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="406">Enables regular nomination, default
@@ -3417,28 +3449,36 @@ the other value.</doc>
       </member>
       <member name="reliable"
               value="2"
-              c:identifier="NICE_AGENT_OPTION_RELIABLE">
+              c:identifier="NICE_AGENT_OPTION_RELIABLE"
+              glib:nick="reliable"
+              glib:name="NICE_AGENT_OPTION_RELIABLE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="408">Enables reliable mode, possibly using PseudoTCP, *  see nice_agent_new_reliable().</doc>
       </member>
       <member name="lite_mode"
               value="4"
-              c:identifier="NICE_AGENT_OPTION_LITE_MODE">
+              c:identifier="NICE_AGENT_OPTION_LITE_MODE"
+              glib:nick="lite-mode"
+              glib:name="NICE_AGENT_OPTION_LITE_MODE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="409">Enable lite mode</doc>
       </member>
       <member name="ice_trickle"
               value="8"
-              c:identifier="NICE_AGENT_OPTION_ICE_TRICKLE">
+              c:identifier="NICE_AGENT_OPTION_ICE_TRICKLE"
+              glib:nick="ice-trickle"
+              glib:name="NICE_AGENT_OPTION_ICE_TRICKLE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="410">Enable ICE trickle mode</doc>
       </member>
       <member name="support_renomination"
               value="16"
-              c:identifier="NICE_AGENT_OPTION_SUPPORT_RENOMINATION">
+              c:identifier="NICE_AGENT_OPTION_SUPPORT_RENOMINATION"
+              glib:nick="support-renomination"
+              glib:name="NICE_AGENT_OPTION_SUPPORT_RENOMINATION">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="411">Enable renomination triggered by NOMINATION STUN attribute
@@ -3446,14 +3486,18 @@ proposed here: https://tools.ietf.org/html/draft-thatcher-ice-renomination-00</d
       </member>
       <member name="consent_freshness"
               value="32"
-              c:identifier="NICE_AGENT_OPTION_CONSENT_FRESHNESS">
+              c:identifier="NICE_AGENT_OPTION_CONSENT_FRESHNESS"
+              glib:nick="consent-freshness"
+              glib:name="NICE_AGENT_OPTION_CONSENT_FRESHNESS">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="413">Enable RFC 7675 consent freshness support. (Since: 0.1.19)</doc>
       </member>
       <member name="bytestream_tcp"
               value="64"
-              c:identifier="NICE_AGENT_OPTION_BYTESTREAM_TCP">
+              c:identifier="NICE_AGENT_OPTION_BYTESTREAM_TCP"
+              glib:nick="bytestream-tcp"
+              glib:name="NICE_AGENT_OPTION_BYTESTREAM_TCP">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="414">Use bytestream mode for reliable TCP connections. (Since: 0.1.20)</doc>
@@ -3542,6 +3586,33 @@ local addresses, and 3 bits for the number of turn servers.</doc>
       <source-position filename="agent/candidate.h" line="77"/>
       <type name="gint" c:type="gint"/>
     </constant>
+    <function-macro name="CHECK_VERSION"
+                    c:identifier="NICE_CHECK_VERSION"
+                    version="0.1.20"
+                    introspectable="0">
+      <doc xml:space="preserve"
+           filename="nice/nice.h"
+           line="44">Macro that returns TRUE if the version if libnice that you are compiling
+against is greater or equal to the argument</doc>
+      <source-position filename="nice/nice.h" line="56"/>
+      <parameters>
+        <parameter name="major">
+          <doc xml:space="preserve"
+               filename="nice/nice.h"
+               line="46">The major numbe of the version</doc>
+        </parameter>
+        <parameter name="minor">
+          <doc xml:space="preserve"
+               filename="nice/nice.h"
+               line="47">The major numbe of the version</doc>
+        </parameter>
+        <parameter name="micro">
+          <doc xml:space="preserve"
+               filename="nice/nice.h"
+               line="48">The major numbe of the version</doc>
+        </parameter>
+      </parameters>
+    </function-macro>
     <record name="Candidate"
             c:type="NiceCandidate"
             glib:type-name="NiceCandidate"
@@ -3764,7 +3835,51 @@ address will be filled only if the candidate was generated using an STUN server.
           </parameter>
         </parameters>
       </method>
-      <function name="transport_to_string"
+    </record>
+    <enumeration name="CandidateTransport"
+                 glib:type-name="NiceCandidateTransport"
+                 glib:get-type="nice_candidate_transport_get_type"
+                 c:type="NiceCandidateTransport">
+      <doc xml:space="preserve"
+           filename="agent/candidate.h"
+           line="107">An enum representing the type of transport to use</doc>
+      <member name="udp"
+              value="0"
+              c:identifier="NICE_CANDIDATE_TRANSPORT_UDP"
+              glib:nick="udp"
+              glib:name="NICE_CANDIDATE_TRANSPORT_UDP">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="109">UDP transport</doc>
+      </member>
+      <member name="tcp_active"
+              value="1"
+              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE"
+              glib:nick="tcp-active"
+              glib:name="NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="110">TCP Active transport</doc>
+      </member>
+      <member name="tcp_passive"
+              value="2"
+              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE"
+              glib:nick="tcp-passive"
+              glib:name="NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="111">TCP Passive transport</doc>
+      </member>
+      <member name="tcp_so"
+              value="3"
+              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_SO"
+              glib:nick="tcp-so"
+              glib:name="NICE_CANDIDATE_TRANSPORT_TCP_SO">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="112">TCP Simultaneous-Open transport</doc>
+      </member>
+      <function name="to_string"
                 c:identifier="nice_candidate_transport_to_string"
                 version="0.1.19">
         <doc xml:space="preserve"
@@ -3787,7 +3902,51 @@ candidate transport.</doc>
           </parameter>
         </parameters>
       </function>
-      <function name="type_to_string"
+    </enumeration>
+    <enumeration name="CandidateType"
+                 glib:type-name="NiceCandidateType"
+                 glib:get-type="nice_candidate_type_get_type"
+                 c:type="NiceCandidateType">
+      <doc xml:space="preserve"
+           filename="agent/candidate.h"
+           line="90">An enum representing the type of a candidate</doc>
+      <member name="host"
+              value="0"
+              c:identifier="NICE_CANDIDATE_TYPE_HOST"
+              glib:nick="host"
+              glib:name="NICE_CANDIDATE_TYPE_HOST">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="92">A host candidate</doc>
+      </member>
+      <member name="server_reflexive"
+              value="1"
+              c:identifier="NICE_CANDIDATE_TYPE_SERVER_REFLEXIVE"
+              glib:nick="server-reflexive"
+              glib:name="NICE_CANDIDATE_TYPE_SERVER_REFLEXIVE">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="93">A server reflexive candidate (or a NAT-assisted candidate)</doc>
+      </member>
+      <member name="peer_reflexive"
+              value="2"
+              c:identifier="NICE_CANDIDATE_TYPE_PEER_REFLEXIVE"
+              glib:nick="peer-reflexive"
+              glib:name="NICE_CANDIDATE_TYPE_PEER_REFLEXIVE">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="94">A peer reflexive candidate</doc>
+      </member>
+      <member name="relayed"
+              value="3"
+              c:identifier="NICE_CANDIDATE_TYPE_RELAYED"
+              glib:nick="relayed"
+              glib:name="NICE_CANDIDATE_TYPE_RELAYED">
+        <doc xml:space="preserve"
+             filename="agent/candidate.h"
+             line="95">A relay candidate</doc>
+      </member>
+      <function name="to_string"
                 c:identifier="nice_candidate_type_to_string"
                 version="0.1.19">
         <doc xml:space="preserve"
@@ -3810,72 +3969,11 @@ candidate type.</doc>
           </parameter>
         </parameters>
       </function>
-    </record>
-    <enumeration name="CandidateTransport" c:type="NiceCandidateTransport">
-      <doc xml:space="preserve"
-           filename="agent/candidate.h"
-           line="107">An enum representing the type of transport to use</doc>
-      <source-position filename="agent/candidate.h" line="122"/>
-      <member name="udp" value="0" c:identifier="NICE_CANDIDATE_TRANSPORT_UDP">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="109">UDP transport</doc>
-      </member>
-      <member name="tcp_active"
-              value="1"
-              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_ACTIVE">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="110">TCP Active transport</doc>
-      </member>
-      <member name="tcp_passive"
-              value="2"
-              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_PASSIVE">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="111">TCP Passive transport</doc>
-      </member>
-      <member name="tcp_so"
-              value="3"
-              c:identifier="NICE_CANDIDATE_TRANSPORT_TCP_SO">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="112">TCP Simultaneous-Open transport</doc>
-      </member>
     </enumeration>
-    <enumeration name="CandidateType" c:type="NiceCandidateType">
-      <doc xml:space="preserve"
-           filename="agent/candidate.h"
-           line="90">An enum representing the type of a candidate</doc>
-      <source-position filename="agent/candidate.h" line="105"/>
-      <member name="host" value="0" c:identifier="NICE_CANDIDATE_TYPE_HOST">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="92">A host candidate</doc>
-      </member>
-      <member name="server_reflexive"
-              value="1"
-              c:identifier="NICE_CANDIDATE_TYPE_SERVER_REFLEXIVE">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="93">A server reflexive candidate (or a NAT-assisted candidate)</doc>
-      </member>
-      <member name="peer_reflexive"
-              value="2"
-              c:identifier="NICE_CANDIDATE_TYPE_PEER_REFLEXIVE">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="94">A peer reflexive candidate</doc>
-      </member>
-      <member name="relayed"
-              value="3"
-              c:identifier="NICE_CANDIDATE_TYPE_RELAYED">
-        <doc xml:space="preserve"
-             filename="agent/candidate.h"
-             line="95">A relay candidate</doc>
-      </member>
-    </enumeration>
-    <enumeration name="Compatibility" c:type="NiceCompatibility">
+    <enumeration name="Compatibility"
+                 glib:type-name="NiceCompatibility"
+                 glib:get-type="nice_compatibility_get_type"
+                 c:type="NiceCompatibility">
       <doc xml:space="preserve"
            filename="agent/agent.h"
            line="319">An enum to specify which compatible specifications the #NiceAgent should use.
@@ -3893,10 +3991,11 @@ represents the same compatibility as @NICE_COMPATIBILITY_RFC5245 &lt;/warning&gt
    fails and ICE-UDP succeeds.
   &lt;/para&gt;
  &lt;/note&gt;</doc>
-      <source-position filename="agent/agent.h" line="359"/>
       <member name="rfc5245"
               value="0"
-              c:identifier="NICE_COMPATIBILITY_RFC5245">
+              c:identifier="NICE_COMPATIBILITY_RFC5245"
+              glib:nick="rfc5245"
+              glib:name="NICE_COMPATIBILITY_RFC5245">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="321">Use compatibility with the RFC5245 ICE-UDP specs
@@ -3904,82 +4003,118 @@ and RFC6544 ICE-TCP specs</doc>
       </member>
       <member name="draft19"
               value="0"
-              c:identifier="NICE_COMPATIBILITY_DRAFT19">
+              c:identifier="NICE_COMPATIBILITY_DRAFT19"
+              glib:nick="draft19"
+              glib:name="NICE_COMPATIBILITY_DRAFT19">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="329">Use compatibility for ICE Draft 19 specs</doc>
       </member>
-      <member name="google" value="1" c:identifier="NICE_COMPATIBILITY_GOOGLE">
+      <member name="google"
+              value="1"
+              c:identifier="NICE_COMPATIBILITY_GOOGLE"
+              glib:nick="google"
+              glib:name="NICE_COMPATIBILITY_GOOGLE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="323">Use compatibility for Google Talk specs</doc>
       </member>
-      <member name="msn" value="2" c:identifier="NICE_COMPATIBILITY_MSN">
+      <member name="msn"
+              value="2"
+              c:identifier="NICE_COMPATIBILITY_MSN"
+              glib:nick="msn"
+              glib:name="NICE_COMPATIBILITY_MSN">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="324">Use compatibility for MSN Messenger specs</doc>
       </member>
       <member name="wlm2009"
               value="3"
-              c:identifier="NICE_COMPATIBILITY_WLM2009">
+              c:identifier="NICE_COMPATIBILITY_WLM2009"
+              glib:nick="wlm2009"
+              glib:name="NICE_COMPATIBILITY_WLM2009">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="325">Use compatibility with Windows Live Messenger
 2009</doc>
       </member>
-      <member name="oc2007" value="4" c:identifier="NICE_COMPATIBILITY_OC2007">
+      <member name="oc2007"
+              value="4"
+              c:identifier="NICE_COMPATIBILITY_OC2007"
+              glib:nick="oc2007"
+              glib:name="NICE_COMPATIBILITY_OC2007">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="327">Use compatibility with Microsoft Office Communicator 2007</doc>
       </member>
       <member name="oc2007r2"
               value="5"
-              c:identifier="NICE_COMPATIBILITY_OC2007R2">
+              c:identifier="NICE_COMPATIBILITY_OC2007R2"
+              glib:nick="oc2007r2"
+              glib:name="NICE_COMPATIBILITY_OC2007R2">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="328">Use compatibility with Microsoft Office Communicator 2007 R2</doc>
       </member>
-      <member name="last" value="5" c:identifier="NICE_COMPATIBILITY_LAST">
+      <member name="last"
+              value="5"
+              c:identifier="NICE_COMPATIBILITY_LAST"
+              glib:nick="last"
+              glib:name="NICE_COMPATIBILITY_LAST">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="330">Dummy last compatibility mode</doc>
       </member>
     </enumeration>
-    <enumeration name="ComponentState" c:type="NiceComponentState">
+    <enumeration name="ComponentState"
+                 glib:type-name="NiceComponentState"
+                 glib:get-type="nice_component_state_get_type"
+                 c:type="NiceComponentState">
       <doc xml:space="preserve"
            filename="agent/agent.h"
            line="271">An enum representing the state of a component.
 &lt;para&gt; See also: #NiceAgent::component-state-changed &lt;/para&gt;</doc>
-      <source-position filename="agent/agent.h" line="295"/>
       <member name="disconnected"
               value="0"
-              c:identifier="NICE_COMPONENT_STATE_DISCONNECTED">
+              c:identifier="NICE_COMPONENT_STATE_DISCONNECTED"
+              glib:nick="disconnected"
+              glib:name="NICE_COMPONENT_STATE_DISCONNECTED">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="273">No activity scheduled</doc>
       </member>
       <member name="gathering"
               value="1"
-              c:identifier="NICE_COMPONENT_STATE_GATHERING">
+              c:identifier="NICE_COMPONENT_STATE_GATHERING"
+              glib:nick="gathering"
+              glib:name="NICE_COMPONENT_STATE_GATHERING">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="274">Gathering local candidates</doc>
       </member>
       <member name="connecting"
               value="2"
-              c:identifier="NICE_COMPONENT_STATE_CONNECTING">
+              c:identifier="NICE_COMPONENT_STATE_CONNECTING"
+              glib:nick="connecting"
+              glib:name="NICE_COMPONENT_STATE_CONNECTING">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="275">Establishing connectivity</doc>
       </member>
       <member name="connected"
               value="3"
-              c:identifier="NICE_COMPONENT_STATE_CONNECTED">
+              c:identifier="NICE_COMPONENT_STATE_CONNECTED"
+              glib:nick="connected"
+              glib:name="NICE_COMPONENT_STATE_CONNECTED">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="276">At least one working candidate pair</doc>
       </member>
-      <member name="ready" value="4" c:identifier="NICE_COMPONENT_STATE_READY">
+      <member name="ready"
+              value="4"
+              c:identifier="NICE_COMPONENT_STATE_READY"
+              glib:nick="ready"
+              glib:name="NICE_COMPONENT_STATE_READY">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="277">ICE concluded, candidate pair selection
@@ -3987,19 +4122,51 @@ is now final</doc>
       </member>
       <member name="failed"
               value="5"
-              c:identifier="NICE_COMPONENT_STATE_FAILED">
+              c:identifier="NICE_COMPONENT_STATE_FAILED"
+              glib:nick="failed"
+              glib:name="NICE_COMPONENT_STATE_FAILED">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="279">Connectivity checks have been completed,
 but connectivity was not established</doc>
       </member>
-      <member name="last" value="6" c:identifier="NICE_COMPONENT_STATE_LAST">
+      <member name="last"
+              value="6"
+              c:identifier="NICE_COMPONENT_STATE_LAST"
+              glib:nick="last"
+              glib:name="NICE_COMPONENT_STATE_LAST">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="281">Dummy state</doc>
       </member>
+      <function name="to_string"
+                c:identifier="nice_component_state_to_string"
+                version="0.1.6">
+        <doc xml:space="preserve"
+             filename="agent/agent.h"
+             line="1602">Returns a string representation of the state, generally to use in debug
+messages.</doc>
+        <source-position filename="agent/agent.h" line="1613"/>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve"
+               filename="agent/agent.h"
+               line="1609">a string representation of @state</doc>
+          <type name="utf8" c:type="const gchar*"/>
+        </return-value>
+        <parameters>
+          <parameter name="state" transfer-ownership="none">
+            <doc xml:space="preserve"
+                 filename="agent/agent.h"
+                 line="1604">a #NiceComponentState</doc>
+            <type name="ComponentState" c:type="NiceComponentState"/>
+          </parameter>
+        </parameters>
+      </function>
     </enumeration>
-    <enumeration name="ComponentType" c:type="NiceComponentType">
+    <enumeration name="ComponentType"
+                 glib:type-name="NiceComponentType"
+                 glib:get-type="nice_component_type_get_type"
+                 c:type="NiceComponentType">
       <doc xml:space="preserve"
            filename="agent/agent.h"
            line="298">Convenience enum representing the type of a component for use as the
@@ -4010,13 +4177,20 @@ component_id for RTP/RTCP usages.
    nice_agent_send (agent, stream_id, NICE_COMPONENT_TYPE_RTP, len, buf);
    &lt;/programlisting&gt;
   &lt;/example&gt;</doc>
-      <source-position filename="agent/agent.h" line="316"/>
-      <member name="rtp" value="1" c:identifier="NICE_COMPONENT_TYPE_RTP">
+      <member name="rtp"
+              value="1"
+              c:identifier="NICE_COMPONENT_TYPE_RTP"
+              glib:nick="rtp"
+              glib:name="NICE_COMPONENT_TYPE_RTP">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="300">RTP Component type</doc>
       </member>
-      <member name="rtcp" value="2" c:identifier="NICE_COMPONENT_TYPE_RTCP">
+      <member name="rtcp"
+              value="2"
+              c:identifier="NICE_COMPONENT_TYPE_RTCP"
+              glib:nick="rtcp"
+              glib:name="NICE_COMPONENT_TYPE_RTCP">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="301">RTCP Component type</doc>
@@ -4035,24 +4209,6 @@ component_id for RTP/RTCP usages.
                     c:identifier="NICE_IS_AGENT_CLASS"
                     introspectable="0">
       <source-position filename="agent/agent.h" line="241"/>
-      <parameters>
-        <parameter name="klass">
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="IS_PSEUDO_TCP_SOCKET"
-                    c:identifier="IS_PSEUDO_TCP_SOCKET"
-                    introspectable="0">
-      <source-position filename="agent/pseudotcp.h" line="117"/>
-      <parameters>
-        <parameter name="obj">
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="IS_PSEUDO_TCP_SOCKET_CLASS"
-                    c:identifier="IS_PSEUDO_TCP_SOCKET_CLASS"
-                    introspectable="0">
-      <source-position filename="agent/pseudotcp.h" line="119"/>
       <parameters>
         <parameter name="klass">
         </parameter>
@@ -4107,6 +4263,8 @@ transmitted the message, or %NULL</doc>
     </record>
     <enumeration name="NominationMode"
                  version="0.1.15"
+                 glib:type-name="NiceNominationMode"
+                 glib:get-type="nice_nomination_mode_get_type"
                  c:type="NiceNominationMode">
       <doc xml:space="preserve"
            filename="agent/agent.h"
@@ -4117,17 +4275,20 @@ agent chooses to put the USE-CANDIDATE attribute in its STUN
 messages. The aggressive mode is supposed to nominate a pair
 faster, than the regular mode, potentially causing the nominated
 pair to change until the connection check completes.</doc>
-      <source-position filename="agent/agent.h" line="401"/>
       <member name="regular"
               value="0"
-              c:identifier="NICE_NOMINATION_MODE_REGULAR">
+              c:identifier="NICE_NOMINATION_MODE_REGULAR"
+              glib:nick="regular"
+              glib:name="NICE_NOMINATION_MODE_REGULAR">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="385">Regular nomination mode</doc>
       </member>
       <member name="aggressive"
               value="1"
-              c:identifier="NICE_NOMINATION_MODE_AGGRESSIVE">
+              c:identifier="NICE_NOMINATION_MODE_AGGRESSIVE"
+              glib:nick="aggressive"
+              glib:name="NICE_NOMINATION_MODE_AGGRESSIVE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="384">Aggressive nomination mode</doc>
@@ -4167,957 +4328,83 @@ is %NULL-terminated</doc>
         <type name="gint" c:type="gint"/>
       </field>
     </record>
-    <function-macro name="PSEUDOTCP_SOCKET_GET_CLASS"
-                    c:identifier="PSEUDOTCP_SOCKET_GET_CLASS"
-                    introspectable="0">
-      <source-position filename="agent/pseudotcp.h" line="121"/>
-      <parameters>
-        <parameter name="obj">
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="PSEUDO_TCP_SOCKET"
-                    c:identifier="PSEUDO_TCP_SOCKET"
-                    introspectable="0">
-      <source-position filename="agent/pseudotcp.h" line="111"/>
-      <parameters>
-        <parameter name="obj">
-        </parameter>
-      </parameters>
-    </function-macro>
-    <function-macro name="PSEUDO_TCP_SOCKET_CLASS"
-                    c:identifier="PSEUDO_TCP_SOCKET_CLASS"
-                    introspectable="0">
-      <source-position filename="agent/pseudotcp.h" line="114"/>
-      <parameters>
-        <parameter name="klass">
-        </parameter>
-      </parameters>
-    </function-macro>
-    <enumeration name="ProxyType" version="0.0.4" c:type="NiceProxyType">
+    <enumeration name="ProxyType"
+                 version="0.0.4"
+                 glib:type-name="NiceProxyType"
+                 glib:get-type="nice_proxy_type_get_type"
+                 c:type="NiceProxyType">
       <doc xml:space="preserve"
            filename="agent/agent.h"
            line="361">An enum to specify which proxy type to use for relaying.
 Note that the proxies will only be used with TCP TURN relaying.
 &lt;para&gt; See also: #NiceAgent:proxy-type &lt;/para&gt;</doc>
-      <source-position filename="agent/agent.h" line="380"/>
-      <member name="none" value="0" c:identifier="NICE_PROXY_TYPE_NONE">
+      <member name="none"
+              value="0"
+              c:identifier="NICE_PROXY_TYPE_NONE"
+              glib:nick="none"
+              glib:name="NICE_PROXY_TYPE_NONE">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="363">Do not use a proxy</doc>
       </member>
-      <member name="socks5" value="1" c:identifier="NICE_PROXY_TYPE_SOCKS5">
+      <member name="socks5"
+              value="1"
+              c:identifier="NICE_PROXY_TYPE_SOCKS5"
+              glib:nick="socks5"
+              glib:name="NICE_PROXY_TYPE_SOCKS5">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="364">Use a SOCKS5 proxy</doc>
       </member>
-      <member name="http" value="2" c:identifier="NICE_PROXY_TYPE_HTTP">
+      <member name="http"
+              value="2"
+              c:identifier="NICE_PROXY_TYPE_HTTP"
+              glib:nick="http"
+              glib:name="NICE_PROXY_TYPE_HTTP">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="365">Use an HTTP proxy</doc>
       </member>
-      <member name="last" value="2" c:identifier="NICE_PROXY_TYPE_LAST">
+      <member name="last"
+              value="2"
+              c:identifier="NICE_PROXY_TYPE_LAST"
+              glib:nick="last"
+              glib:name="NICE_PROXY_TYPE_LAST">
         <doc xml:space="preserve"
              filename="agent/agent.h"
              line="366">Dummy last proxy type</doc>
       </member>
     </enumeration>
-    <record name="PseudoTcpCallbacks"
-            c:type="PseudoTcpCallbacks"
-            version="0.0.11">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="221">A structure containing callbacks functions that will be called by the
-#PseudoTcpSocket when some events happen.
-&lt;para&gt; See also: #PseudoTcpWriteResult &lt;/para&gt;</doc>
-      <source-position filename="agent/pseudotcp.h" line="244"/>
-      <field name="user_data" writable="1">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="223">A user defined pointer to be passed to the callbacks</doc>
-        <type name="gpointer" c:type="gpointer"/>
-      </field>
-      <field name="PseudoTcpOpened">
-        <callback name="PseudoTcpOpened">
-          <source-position filename="agent/pseudotcp.h" line="238"/>
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-          <parameters>
-            <parameter name="tcp" transfer-ownership="none">
-              <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="PseudoTcpReadable">
-        <callback name="PseudoTcpReadable">
-          <source-position filename="agent/pseudotcp.h" line="239"/>
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-          <parameters>
-            <parameter name="tcp" transfer-ownership="none">
-              <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="PseudoTcpWritable">
-        <callback name="PseudoTcpWritable">
-          <source-position filename="agent/pseudotcp.h" line="240"/>
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-          <parameters>
-            <parameter name="tcp" transfer-ownership="none">
-              <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="PseudoTcpClosed">
-        <callback name="PseudoTcpClosed">
-          <source-position filename="agent/pseudotcp.h" line="241"/>
-          <return-value transfer-ownership="none">
-            <type name="none" c:type="void"/>
-          </return-value>
-          <parameters>
-            <parameter name="tcp" transfer-ownership="none">
-              <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-            </parameter>
-            <parameter name="error" transfer-ownership="none">
-              <type name="guint32" c:type="guint32"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-      <field name="WritePacket">
-        <callback name="WritePacket">
-          <source-position filename="agent/pseudotcp.h" line="242"/>
-          <return-value transfer-ownership="none">
-            <type name="PseudoTcpWriteResult" c:type="PseudoTcpWriteResult"/>
-          </return-value>
-          <parameters>
-            <parameter name="tcp" transfer-ownership="none">
-              <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-            </parameter>
-            <parameter name="buffer" transfer-ownership="none">
-              <type name="utf8" c:type="const gchar*"/>
-            </parameter>
-            <parameter name="len" transfer-ownership="none">
-              <type name="guint32" c:type="guint32"/>
-            </parameter>
-            <parameter name="data" transfer-ownership="none">
-              <type name="gpointer" c:type="gpointer"/>
-            </parameter>
-          </parameters>
-        </callback>
-      </field>
-    </record>
-    <enumeration name="PseudoTcpDebugLevel"
-                 version="0.0.11"
-                 c:type="PseudoTcpDebugLevel">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="126">Valid values of debug levels to be set.</doc>
-      <source-position filename="agent/pseudotcp.h" line="140"/>
-      <member name="none" value="0" c:identifier="PSEUDO_TCP_DEBUG_NONE">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="128">Disable debug messages</doc>
-      </member>
-      <member name="normal" value="1" c:identifier="PSEUDO_TCP_DEBUG_NORMAL">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="129">Enable basic debug messages</doc>
-      </member>
-      <member name="verbose" value="2" c:identifier="PSEUDO_TCP_DEBUG_VERBOSE">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="130">Enable verbose debug messages</doc>
-      </member>
-    </enumeration>
-    <enumeration name="PseudoTcpShutdown"
-                 version="0.1.8"
-                 c:type="PseudoTcpShutdown">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="203">Options for which parts of a connection to shut down when calling
-pseudo_tcp_socket_shutdown(). These correspond to the values passed to POSIX
-shutdown().</doc>
-      <source-position filename="agent/pseudotcp.h" line="219"/>
-      <member name="rd" value="0" c:identifier="PSEUDO_TCP_SHUTDOWN_RD">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="205">Shut down the local reader only</doc>
-      </member>
-      <member name="wr" value="1" c:identifier="PSEUDO_TCP_SHUTDOWN_WR">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="206">Shut down the local writer only</doc>
-      </member>
-      <member name="rdwr" value="2" c:identifier="PSEUDO_TCP_SHUTDOWN_RDWR">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="207">Shut down both reading and writing</doc>
-      </member>
-    </enumeration>
-    <class name="PseudoTcpSocket"
-           c:symbol-prefix="pseudo_tcp_socket"
-           c:type="PseudoTcpSocket"
-           version="0.0.11"
-           parent="GObject.Object"
-           glib:type-name="PseudoTcpSocket"
-           glib:get-type="pseudo_tcp_socket_get_type"
-           glib:type-struct="PseudoTcpSocketClass">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="96">The #PseudoTcpSocket is the GObject implementing the Pseudo TCP Socket</doc>
-      <source-position filename="agent/pseudotcp.h" line="105"/>
-      <constructor name="new"
-                   c:identifier="pseudo_tcp_socket_new"
-                   version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="246">Creates a new #PseudoTcpSocket for the specified conversation
-
- &lt;note&gt;
-   &lt;para&gt;
-     The @callbacks must be non-NULL, in order to get notified of packets the
-     socket needs to send.
-   &lt;/para&gt;
-   &lt;para&gt;
-     If the @callbacks structure was dynamicly allocated, it can be freed
-     after the call @pseudo_tcp_socket_new
-   &lt;/para&gt;
- &lt;/note&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="269"/>
-        <return-value transfer-ownership="full">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="265">The new #PseudoTcpSocket object, %NULL on error</doc>
-          <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-        </return-value>
-        <parameters>
-          <parameter name="conversation" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="248">The conversation id for the socket.</doc>
-            <type name="guint32" c:type="guint32"/>
-          </parameter>
-          <parameter name="callbacks" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="249">A pointer to the #PseudoTcpCallbacks structure for getting
-notified of the #PseudoTcpSocket events.</doc>
-            <type name="PseudoTcpCallbacks" c:type="PseudoTcpCallbacks*"/>
-          </parameter>
-        </parameters>
-      </constructor>
-      <method name="can_send"
-              c:identifier="pseudo_tcp_socket_can_send"
-              version="0.1.5">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="524">Returns if there is space in the send buffer to send any data.</doc>
-        <source-position filename="agent/pseudotcp.h" line="535"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="530">%TRUE if data can be sent, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="526">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="close"
-              c:identifier="pseudo_tcp_socket_close"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="341">Close the socket for sending. If @force is set to %FALSE, the socket will
-finish sending pending data before closing. If it is set to %TRUE, the socket
-will discard pending data and close the connection immediately (sending a TCP
-RST segment).
-
-The socket will be closed in both directions – sending and receiving – and
-any pending received data must be read before calling this function, by
-calling pseudo_tcp_socket_recv() until it blocks. If any pending data is in
-the receive buffer when pseudo_tcp_socket_close() is called, a TCP RST
-segment will be sent to the peer to notify it of the data loss.
-
- &lt;note&gt;
-   &lt;para&gt;
-     The %PseudoTcpCallbacks:PseudoTcpClosed callback will not be called once
-     the socket gets closed. It is only used for aborted connection.
-     Instead, the socket gets closed when the pseudo_tcp_socket_get_next_clock()
-     function returns FALSE.
-   &lt;/para&gt;
- &lt;/note&gt;
-
-&lt;para&gt; See also: pseudo_tcp_socket_get_next_clock() &lt;/para&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="370"/>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="343">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="force" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="344">%TRUE to close the socket forcefully, %FALSE to close it gracefully</doc>
-            <type name="gboolean" c:type="gboolean"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="connect"
-              c:identifier="pseudo_tcp_socket_connect"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="273">Connects the #PseudoTcpSocket to the peer with the same conversation id.
-The connection will only be successful after the
-%PseudoTcpCallbacks:PseudoTcpOpened callback is called</doc>
-        <source-position filename="agent/pseudotcp.h" line="286"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="281">%TRUE on success, %FALSE on failure (not in %TCP_LISTEN state)
-&lt;para&gt; See also: pseudo_tcp_socket_get_error() &lt;/para&gt;</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="275">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_available_bytes"
-              c:identifier="pseudo_tcp_socket_get_available_bytes"
-              version="0.1.5">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="510">Gets the number of bytes of data in the buffer that can be read without
-receiving more packets from the network.</doc>
-        <source-position filename="agent/pseudotcp.h" line="522"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="517">The number of bytes or -1 if the connection is not established</doc>
-          <type name="gint" c:type="gint"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="512">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_available_send_space"
-              c:identifier="pseudo_tcp_socket_get_available_send_space"
-              version="0.1.5">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="537">Gets the number of bytes of space available in the transmission buffer.</doc>
-        <source-position filename="agent/pseudotcp.h" line="547"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="543">The number of bytes, or 0 if the connection is not established.</doc>
-          <type name="gsize" c:type="gsize"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="539">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_error"
-              c:identifier="pseudo_tcp_socket_get_error"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="391">Return the last encountered error.
-
- &lt;note&gt;
-   &lt;para&gt;
-     The return value can be :
-     &lt;para&gt;
-       EINVAL (for pseudo_tcp_socket_connect()).
-     &lt;/para&gt;
-     &lt;para&gt;
-       EWOULDBLOCK or ENOTCONN (for pseudo_tcp_socket_recv() and
-       pseudo_tcp_socket_send()).
-     &lt;/para&gt;
-   &lt;/para&gt;
- &lt;/note&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="417"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="410">The error code
-&lt;para&gt; See also: pseudo_tcp_socket_connect() &lt;/para&gt;
-&lt;para&gt; See also: pseudo_tcp_socket_recv() &lt;/para&gt;
-&lt;para&gt; See also: pseudo_tcp_socket_send() &lt;/para&gt;</doc>
-          <type name="gint" c:type="int"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="393">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="get_next_clock"
-              c:identifier="pseudo_tcp_socket_get_next_clock"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="420">Call this to determine the timeout needed before the next time call
-to pseudo_tcp_socket_notify_clock() should be made.</doc>
-        <source-position filename="agent/pseudotcp.h" line="435"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="428">%TRUE if @timeout was filled, %FALSE if the socket is closed and
-ready to be destroyed.
-
-&lt;para&gt; See also: pseudo_tcp_socket_notify_clock() &lt;/para&gt;</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="422">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="timeout" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="423">A pointer to be filled with the new timeout.</doc>
-            <type name="guint64" c:type="guint64*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="is_closed"
-              c:identifier="pseudo_tcp_socket_is_closed"
-              version="0.1.8">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="568">Gets whether the socket is closed, with the shutdown handshake completed,
-and both peers no longer able to read or write data to the connection.</doc>
-        <source-position filename="agent/pseudotcp.h" line="578"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="575">%TRUE if the socket is closed in both directions, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="570">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="is_closed_remotely"
-              c:identifier="pseudo_tcp_socket_is_closed_remotely"
-              version="0.1.8">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="580">Gets whether the socket has been closed on the remote peer’s side of the
-connection (i.e. whether pseudo_tcp_socket_close() has been called there).
-This is guaranteed to return %TRUE if pseudo_tcp_socket_is_closed() returns
-%TRUE. It will not return %TRUE after pseudo_tcp_socket_close() is called
-until a FIN segment is received from the remote peer.</doc>
-        <source-position filename="agent/pseudotcp.h" line="594"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="590">%TRUE if the remote peer has closed its side of the connection,
-%FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="582">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="notify_clock"
-              c:identifier="pseudo_tcp_socket_notify_clock"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="439">Start the processing of receiving data, pending data or syn/acks.
-Call this based on timeout value returned by
-pseudo_tcp_socket_get_next_clock().
-It's ok to call this too frequently.
-
-&lt;para&gt; See also: pseudo_tcp_socket_get_next_clock() &lt;/para&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="452"/>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="441">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-        </parameters>
-      </method>
-      <method name="notify_message"
-              c:identifier="pseudo_tcp_socket_notify_message"
-              version="0.1.5">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="483">Notify the #PseudoTcpSocket that a new message has arrived, and enqueue the
-data in its buffers to the #PseudoTcpSocket’s receive buffer.</doc>
-        <source-position filename="agent/pseudotcp.h" line="495"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="491">%TRUE if the packet was processed successfully, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="485">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="message" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="486">A #NiceInputMessage containing the received data.</doc>
-            <type name="InputMessage" c:type="NiceInputMessage*"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="notify_mtu"
-              c:identifier="pseudo_tcp_socket_notify_mtu"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="455">Set the MTU of the socket</doc>
-        <source-position filename="agent/pseudotcp.h" line="464"/>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="457">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="mtu" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="458">The new MTU of the socket</doc>
-            <type name="guint16" c:type="guint16"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="notify_packet"
-              c:identifier="pseudo_tcp_socket_notify_packet"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="467">Notify the #PseudoTcpSocket when a new packet arrives</doc>
-        <source-position filename="agent/pseudotcp.h" line="479"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="475">%TRUE if the packet was processed successfully, %FALSE otherwise</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="469">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="470">The buffer containing the received data</doc>
-            <type name="utf8" c:type="const gchar*"/>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="471">The length of @buffer</doc>
-            <type name="guint32" c:type="guint32"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="recv"
-              c:identifier="pseudo_tcp_socket_recv"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="289">Receive data from the socket.
-
- &lt;note&gt;
-   &lt;para&gt;
-     Only call this on the %PseudoTcpCallbacks:PseudoTcpReadable callback.
-   &lt;/para&gt;
-   &lt;para&gt;
-     This function should be called in a loop. If this function does not
-     return -1 with EWOULDBLOCK as the error, the
-     %PseudoTcpCallbacks:PseudoTcpReadable callback will not be called again.
-   &lt;/para&gt;
- &lt;/note&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="313"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="308">The number of bytes received or -1 in case of error
-&lt;para&gt; See also: pseudo_tcp_socket_get_error() &lt;/para&gt;</doc>
-          <type name="gint" c:type="gint"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="291">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="292">The buffer to fill with received data</doc>
-            <type name="utf8" c:type="char*"/>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="293">The length of @buffer</doc>
-            <type name="gsize" c:type="size_t"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="send"
-              c:identifier="pseudo_tcp_socket_send"
-              version="0.0.11">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="316">Send data on the socket.
-
- &lt;note&gt;
-   &lt;para&gt;
-     If this function return -1 with EWOULDBLOCK as the error, or if the return
-     value is lower than @len, then the %PseudoTcpCallbacks:PseudoTcpWritable
-     callback will be called when the socket will become writable.
-   &lt;/para&gt;
- &lt;/note&gt;</doc>
-        <source-position filename="agent/pseudotcp.h" line="337"/>
-        <return-value transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="332">The number of bytes sent or -1 in case of error
-&lt;para&gt; See also: pseudo_tcp_socket_get_error() &lt;/para&gt;</doc>
-          <type name="gint" c:type="gint"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="318">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="buffer" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="319">The buffer with data to send</doc>
-            <type name="utf8" c:type="const char*"/>
-          </parameter>
-          <parameter name="len" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="320">The length of @buffer</doc>
-            <type name="guint32" c:type="guint32"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="set_time"
-              c:identifier="pseudo_tcp_socket_set_time"
-              version="0.1.8">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="549">Sets the current monotonic time to be used by the TCP socket when calculating
-timeouts and expiry times. If this function is not called, or is called with
-@current_time as zero, g_get_monotonic_time() will be used. Otherwise, the
-specified @current_time will be used until it is updated by calling this
-function again.
-
-This function is intended for testing only, and should not be used in
-production code.</doc>
-        <source-position filename="agent/pseudotcp.h" line="566"/>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="551">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="current_time" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="552">Current monotonic time, in milliseconds; or zero to use the
-system monotonic clock.</doc>
-            <type name="guint32" c:type="guint32"/>
-          </parameter>
-        </parameters>
-      </method>
-      <method name="shutdown"
-              c:identifier="pseudo_tcp_socket_shutdown"
-              version="0.1.8">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="372">Shut down sending, receiving, or both on the socket, depending on the value
-of @how. The behaviour of pseudo_tcp_socket_send() and
-pseudo_tcp_socket_recv() will immediately change after this function returns
-(depending on the value of @how), though the socket may continue to process
-network traffic in the background even if sending or receiving data is
-forbidden.
-
-This is equivalent to the POSIX shutdown() function. Setting @how to
-%PSEUDO_TCP_SHUTDOWN_RDWR is equivalent to calling pseudo_tcp_socket_close().</doc>
-        <source-position filename="agent/pseudotcp.h" line="389"/>
-        <return-value transfer-ownership="none">
-          <type name="none" c:type="void"/>
-        </return-value>
-        <parameters>
-          <instance-parameter name="self" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="374">The #PseudoTcpSocket object.</doc>
-            <type name="PseudoTcpSocket" c:type="PseudoTcpSocket*"/>
-          </instance-parameter>
-          <parameter name="how" transfer-ownership="none">
-            <doc xml:space="preserve"
-                 filename="agent/pseudotcp.h"
-                 line="375">The directions of the connection to shut down.</doc>
-            <type name="PseudoTcpShutdown" c:type="PseudoTcpShutdown"/>
-          </parameter>
-        </parameters>
-      </method>
-      <property name="ack-delay" writable="1" transfer-ownership="none">
-        <type name="guint" c:type="guint"/>
-      </property>
-      <property name="callbacks" writable="1" transfer-ownership="none">
-        <type name="gpointer" c:type="gpointer"/>
-      </property>
-      <property name="conversation"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <type name="guint" c:type="guint"/>
-      </property>
-      <property name="no-delay" writable="1" transfer-ownership="none">
-        <type name="gboolean" c:type="gboolean"/>
-      </property>
-      <property name="rcv-buf" writable="1" transfer-ownership="none">
-        <type name="guint" c:type="guint"/>
-      </property>
-      <property name="snd-buf" writable="1" transfer-ownership="none">
-        <type name="guint" c:type="guint"/>
-      </property>
-      <property name="state" transfer-ownership="none">
-        <type name="guint" c:type="guint"/>
-      </property>
-      <property name="support-fin-ack"
-                version="0.1.8"
-                writable="1"
-                construct-only="1"
-                transfer-ownership="none">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.c"
-             line="667">Whether to support the FIN–ACK extension to the pseudo-TCP protocol for
-this socket. The extension is only compatible with other libnice pseudo-TCP
-stacks, and not with Jingle pseudo-TCP stacks. If enabled, support is
-negotiatied on connection setup, so it is safe for a #PseudoTcpSocket with
-support enabled to be used with one with it disabled, or with a Jingle
-pseudo-TCP socket which doesn’t support it at all.
-
-Support is enabled by default.</doc>
-        <type name="gboolean" c:type="gboolean"/>
-      </property>
-    </class>
-    <record name="PseudoTcpSocketClass"
-            c:type="PseudoTcpSocketClass"
-            disguised="1"
-            glib:is-gtype-struct-for="PseudoTcpSocket">
-      <source-position filename="agent/pseudotcp.h" line="105"/>
-    </record>
-    <enumeration name="PseudoTcpState"
-                 version="0.0.11"
-                 c:type="PseudoTcpState">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="142">An enum representing the state of the #PseudoTcpSocket. These states
-correspond to the TCP states in RFC 793.
-&lt;para&gt; See also: #PseudoTcpSocket:state &lt;/para&gt;</doc>
-      <source-position filename="agent/pseudotcp.h" line="182"/>
-      <member name="listen" value="0" c:identifier="PSEUDO_TCP_LISTEN">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="144">The socket's initial state. The socket isn't connected and is
-listening for an incoming connection</doc>
-      </member>
-      <member name="syn_sent" value="1" c:identifier="PSEUDO_TCP_SYN_SENT">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="146">The socket has sent a connection request (SYN) packet and is
-waiting for an answer</doc>
-      </member>
-      <member name="syn_received"
-              value="2"
-              c:identifier="PSEUDO_TCP_SYN_RECEIVED">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="148">The socket has received a connection request (SYN) packet.</doc>
-      </member>
-      <member name="established"
-              value="3"
-              c:identifier="PSEUDO_TCP_ESTABLISHED">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="149">The socket is connected</doc>
-      </member>
-      <member name="closed" value="4" c:identifier="PSEUDO_TCP_CLOSED">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="150">The socket has been closed</doc>
-      </member>
-      <member name="fin_wait_1" value="5" c:identifier="PSEUDO_TCP_FIN_WAIT_1">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="151">The socket has been closed locally but not remotely
-(Since: 0.1.8)</doc>
-      </member>
-      <member name="fin_wait_2" value="6" c:identifier="PSEUDO_TCP_FIN_WAIT_2">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="153">The socket has been closed locally but not remotely
-(Since: 0.1.8)</doc>
-      </member>
-      <member name="closing" value="7" c:identifier="PSEUDO_TCP_CLOSING">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="155">The socket has been closed locally and remotely
-(Since: 0.1.8)</doc>
-      </member>
-      <member name="time_wait" value="8" c:identifier="PSEUDO_TCP_TIME_WAIT">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="157">The socket has been closed locally and remotely
-(Since: 0.1.8)</doc>
-      </member>
-      <member name="close_wait" value="9" c:identifier="PSEUDO_TCP_CLOSE_WAIT">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="159">The socket has been closed remotely but not locally
-(Since: 0.1.8)</doc>
-      </member>
-      <member name="last_ack" value="10" c:identifier="PSEUDO_TCP_LAST_ACK">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="161">The socket has been closed locally and remotely
-(Since: 0.1.8)</doc>
-      </member>
-    </enumeration>
-    <enumeration name="PseudoTcpWriteResult"
-                 version="0.0.11"
-                 c:type="PseudoTcpWriteResult">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="184">An enum representing the result value of the write operation requested by
-the #PseudoTcpSocket.
-&lt;para&gt; See also: %PseudoTcpCallbacks:WritePacket &lt;/para&gt;</doc>
-      <source-position filename="agent/pseudotcp.h" line="201"/>
-      <member name="success" value="0" c:identifier="WR_SUCCESS">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="186">The write operation was successful</doc>
-      </member>
-      <member name="too_large" value="1" c:identifier="WR_TOO_LARGE">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="187">The socket type requires that message be sent atomically
-and the size of the message to be sent made this impossible.</doc>
-      </member>
-      <member name="fail" value="2" c:identifier="WR_FAIL">
-        <doc xml:space="preserve"
-             filename="agent/pseudotcp.h"
-             line="189">There was an error sending the message</doc>
-      </member>
-    </enumeration>
-    <enumeration name="RelayType" c:type="NiceRelayType">
+    <enumeration name="RelayType"
+                 glib:type-name="NiceRelayType"
+                 glib:get-type="nice_relay_type_get_type"
+                 c:type="NiceRelayType">
       <doc xml:space="preserve"
            filename="agent/candidate.h"
            line="124">An enum representing the type of relay to use</doc>
-      <source-position filename="agent/candidate.h" line="136"/>
-      <member name="udp" value="0" c:identifier="NICE_RELAY_TYPE_TURN_UDP">
+      <member name="udp"
+              value="0"
+              c:identifier="NICE_RELAY_TYPE_TURN_UDP"
+              glib:nick="udp"
+              glib:name="NICE_RELAY_TYPE_TURN_UDP">
         <doc xml:space="preserve"
              filename="agent/candidate.h"
              line="126">A TURN relay using UDP</doc>
       </member>
-      <member name="tcp" value="1" c:identifier="NICE_RELAY_TYPE_TURN_TCP">
+      <member name="tcp"
+              value="1"
+              c:identifier="NICE_RELAY_TYPE_TURN_TCP"
+              glib:nick="tcp"
+              glib:name="NICE_RELAY_TYPE_TURN_TCP">
         <doc xml:space="preserve"
              filename="agent/candidate.h"
              line="127">A TURN relay using TCP</doc>
       </member>
-      <member name="tls" value="2" c:identifier="NICE_RELAY_TYPE_TURN_TLS">
+      <member name="tls"
+              value="2"
+              c:identifier="NICE_RELAY_TYPE_TURN_TLS"
+              glib:nick="tls"
+              glib:name="NICE_RELAY_TYPE_TURN_TLS">
         <doc xml:space="preserve"
              filename="agent/candidate.h"
              line="128">A TURN relay using TLS over TCP</doc>
@@ -5236,7 +4523,7 @@ understand correctly the concept of ICE candidates.
     </docsection>
     <function name="candidate_transport_to_string"
               c:identifier="nice_candidate_transport_to_string"
-              moved-to="Candidate.transport_to_string"
+              moved-to="CandidateTransport.to_string"
               version="0.1.19">
       <doc xml:space="preserve"
            filename="agent/candidate.h"
@@ -5260,7 +4547,7 @@ candidate transport.</doc>
     </function>
     <function name="candidate_type_to_string"
               c:identifier="nice_candidate_type_to_string"
-              moved-to="Candidate.type_to_string"
+              moved-to="CandidateType.to_string"
               version="0.1.19">
       <doc xml:space="preserve"
            filename="agent/candidate.h"
@@ -5284,6 +4571,7 @@ candidate type.</doc>
     </function>
     <function name="component_state_to_string"
               c:identifier="nice_component_state_to_string"
+              moved-to="ComponentState.to_string"
               version="0.1.6">
       <doc xml:space="preserve"
            filename="agent/agent.h"
@@ -5305,199 +4593,5 @@ messages.</doc>
         </parameter>
       </parameters>
     </function>
-    <docsection name="debug">
-      <doc xml:space="preserve"
-           filename="agent/debug.h"
-           line="41">&lt;para&gt;Libnice can output a lot of information when debug messages are enabled.
-This can significantly help track down problems and/or understand what
-it's doing.&lt;/para&gt;
-
-&lt;para&gt;You can enable/disable the debug messages by calling nice_debug_enable()
-or nice_debug_disable() and choosing whether you want only ICE debug messages
-or also stun debug messages.&lt;/para&gt;
-
-&lt;para&gt;By default, the debug messages are disabled, unless the environment
-variable NICE_DEBUG is set, in which case, it must contain a comma separated
-list of flags specifying which debug to enable.&lt;/para&gt;
-&lt;para&gt; The currently available flags are "nice", "stun", "pseudotcp",
-"pseudotcp-verbose" or "all" to enable all debug messages.&lt;/para&gt;
-&lt;para&gt; If the 'pseudotcp' flag is enabled, then 'pseudotcp-verbose' gets
-automatically disabled. This is to allow the use of the 'all' flag without
-having verbose messages from pseudotcp. You can enable verbose debug messages
-from the pseudotcp layer by specifying 'pseudotcp-verbose' without the
-'pseudotcp' flag.&lt;/para&gt;
-
-
-&lt;para&gt;This API is unstable and is subject to change at any time...
-More flags are to come and a better API to enable/disable each flag
-should be added.&lt;/para&gt;</doc>
-    </docsection>
-    <function name="debug_disable" c:identifier="nice_debug_disable">
-      <doc xml:space="preserve"
-           filename="agent/debug.h"
-           line="94">Disables libnice debug output to the terminal</doc>
-      <source-position filename="agent/debug.h" line="100"/>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="with_stun" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/debug.h"
-               line="96">Also disable stun debugging messages</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="debug_enable" c:identifier="nice_debug_enable">
-      <doc xml:space="preserve"
-           filename="agent/debug.h"
-           line="76">Enables libnice debug output to the terminal. Note that the
-`G_MESSAGES_DEBUG` and `NICE_DEBUG` environment variables must be set to the
-set of logging domains to print, in order for any output to be printed. Set
-them to `all` to print all debugging messages, or any of the following
-domains:
-- `libnice-stun`
-- `libnice-tests`
-- `libnice-socket`
-- `libnice`
-- `libnice-pseudotcp`
-- `libnice-pseudotcp-verbose`</doc>
-      <source-position filename="agent/debug.h" line="92"/>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="with_stun" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/debug.h"
-               line="78">Also enable STUN debugging messages</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </parameter>
-      </parameters>
-    </function>
-    <docsection name="interfaces">
-      <doc xml:space="preserve"
-           filename="agent/interfaces.h"
-           line="28">These utility functions allow the discovery of local network interfaces
-in a portable manner, they also allow finding the local ip addresses or
-the address allocated to a network interface.</doc>
-    </docsection>
-    <function name="interfaces_get_if_index_by_addr"
-              c:identifier="nice_interfaces_get_if_index_by_addr"
-              version="0.1.20">
-      <doc xml:space="preserve"
-           filename="agent/interfaces.h"
-           line="82">Returns the interface index match the local address passed. This can
-by used for APIs that need a specific address.</doc>
-      <source-position filename="agent/interfaces.h" line="94"/>
-      <return-value transfer-ownership="none">
-        <doc xml:space="preserve"
-             filename="agent/interfaces.h"
-             line="89">The interface index or 0 on error</doc>
-        <type name="guint" c:type="guint"/>
-      </return-value>
-      <parameters>
-        <parameter name="addr" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/interfaces.h"
-               line="84">A #NiceAddress for a local interface</doc>
-          <type name="Address" c:type="NiceAddress*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="interfaces_get_ip_for_interface"
-              c:identifier="nice_interfaces_get_ip_for_interface">
-      <doc xml:space="preserve"
-           filename="agent/interfaces.h"
-           line="45">Retrieves the IP address of an interface by its name. If this fails, %NULL
-is returned.</doc>
-      <source-position filename="agent/interfaces.h" line="55"/>
-      <return-value transfer-ownership="full" nullable="1">
-        <doc xml:space="preserve"
-             filename="agent/interfaces.h"
-             line="52">a newly-allocated string with the IP
-address</doc>
-        <type name="utf8" c:type="gchar*"/>
-      </return-value>
-      <parameters>
-        <parameter name="interface_name" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/interfaces.h"
-               line="47">name of local interface</doc>
-          <type name="utf8" c:type="gchar*"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="interfaces_get_local_interfaces"
-              c:identifier="nice_interfaces_get_local_interfaces">
-      <doc xml:space="preserve"
-           filename="agent/interfaces.h"
-           line="71">Get the list of local interfaces</doc>
-      <source-position filename="agent/interfaces.h" line="79"/>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve"
-             filename="agent/interfaces.h"
-             line="76">a newly-allocated #GList of
-strings. The caller must free it.</doc>
-        <type name="GLib.List" c:type="GList*">
-          <type name="utf8"/>
-        </type>
-      </return-value>
-    </function>
-    <function name="interfaces_get_local_ips"
-              c:identifier="nice_interfaces_get_local_ips">
-      <doc xml:space="preserve"
-           filename="agent/interfaces.h"
-           line="58">Get a list of local ipv4 interface addresses</doc>
-      <source-position filename="agent/interfaces.h" line="68"/>
-      <return-value transfer-ownership="full">
-        <doc xml:space="preserve"
-             filename="agent/interfaces.h"
-             line="64">a newly-allocated #GList of
-strings. The caller must free it.</doc>
-        <type name="GLib.List" c:type="GList*">
-          <type name="utf8"/>
-        </type>
-      </return-value>
-      <parameters>
-        <parameter name="include_loopback" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/interfaces.h"
-               line="60">Include any loopback devices</doc>
-          <type name="gboolean" c:type="gboolean"/>
-        </parameter>
-      </parameters>
-    </function>
-    <function name="pseudo_tcp_set_debug_level"
-              c:identifier="pseudo_tcp_set_debug_level"
-              version="0.0.11">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="499">Sets the debug level to enable/disable normal/verbose debug messages.</doc>
-      <source-position filename="agent/pseudotcp.h" line="507"/>
-      <return-value transfer-ownership="none">
-        <type name="none" c:type="void"/>
-      </return-value>
-      <parameters>
-        <parameter name="level" transfer-ownership="none">
-          <doc xml:space="preserve"
-               filename="agent/pseudotcp.h"
-               line="501">The level of debug to set</doc>
-          <type name="PseudoTcpDebugLevel" c:type="PseudoTcpDebugLevel"/>
-        </parameter>
-      </parameters>
-    </function>
-    <docsection name="pseudotcp">
-      <doc xml:space="preserve"
-           filename="agent/pseudotcp.h"
-           line="41">The #PseudoTcpSocket is an object implementing a Pseudo Tcp Socket for use
-over UDP.
-The socket will implement a subset of the TCP stack to allow for a reliable
-transport over non-reliable sockets (such as UDP).
-
-See the file tests/test-pseudotcp.c in the source package for an example
-of how to use the object.</doc>
-    </docsection>
   </namespace>
 </repository>
